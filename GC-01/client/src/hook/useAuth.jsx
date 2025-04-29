@@ -8,7 +8,7 @@ import {
 import auth from "../config/firebase";
 import Swal from "sweetalert2";
 
-function useAuth() {
+function useAuthFirebase() {
   const [error, seterror] = useState({
     email: false,
     password: false,
@@ -118,4 +118,4 @@ function useAuth() {
   return { error, seterror, Login, Register, Logout };
 }
 
-export default useAuth;
+export default useAuthFirebase;

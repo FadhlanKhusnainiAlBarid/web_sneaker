@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import LogoSneaker from "../assets/logo/Logo sneaker.png";
-import useAuth from "../hook/useAuth";
+import useAuthFirebase from "../hook/useAuth";
 import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function Register() {
-  const { error, seterror, Register } = useAuth();
+  const { error, seterror, Register } = useAuthFirebase();
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [confPassword, setconfPassword] = useState("");

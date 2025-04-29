@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import LogoSneaker from "../assets/logo/Logo sneaker.png";
 import useAuth from "../hook/useAuth";
+import { useNavigate } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function Register() {
   const { error, seterror, Register } = useAuth();
@@ -11,6 +13,18 @@ function Register() {
   useEffect(() => {
     seterror(false);
   }, []);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate("/");
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, [navigate]);
   return (
     <div className="lg:flex h-[calc(100vh-66px)]">
       <div className="hidden lg:flex lg:justify-center items-center w-full h-full bg-amber-500">

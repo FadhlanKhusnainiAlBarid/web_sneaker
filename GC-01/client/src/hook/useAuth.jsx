@@ -5,7 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import auth from "../firebase/config";
+import auth from "../config/firebase";
 import Swal from "sweetalert2";
 
 function useAuth() {

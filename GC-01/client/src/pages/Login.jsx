@@ -1,9 +1,65 @@
-import React from 'react'
+import React from "react";
+import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+import LogoSneaker from "../assets/logo/Logo sneaker.png";
 
 function Login() {
   return (
-    <div>Login</div>
-  )
+    <div className="lg:flex h-[calc(100vh-62px)]">
+      <div className="w-full h-full flex flex-col justify-center items-center">
+        <form className="md:w-1/2 lg:w-2/3 space-y-5">
+          <div>
+            <h1 className="text-2xl md:text-3xl xl:text-4xl font-medium">
+              Login to your Account
+            </h1>
+            <p className="text-xs md:text-base xl:text-lg">
+              See what is going on with your business
+            </p>
+          </div>
+          <div className="space-y-3">
+            <div>
+              <div className="mb-1 block">
+                <Label
+                  htmlFor="email1"
+                  className="text-xs md:text-base xl:text-lg"
+                  color="gray"
+                >
+                  Your email
+                </Label>
+              </div>
+              <TextInput
+                id="email1"
+                type="email"
+                placeholder="mail@abc.com"
+                color="gray"
+                required
+              />
+            </div>
+            <div>
+              <div className="mb-1 block">
+                <Label
+                  htmlFor="password1"
+                  className="text-xs md:text-base xl:text-lg"
+                  color="gray"
+                >
+                  password
+                </Label>
+              </div>
+              <TextInput id="password1" type="password" color="gray" required />
+            </div>
+          </div>
+          <Button type="submit" className="cursor-pointer w-full">
+            Login
+          </Button>
+        </form>
+      </div>
+      <div className="hidden lg:flex lg:justify-center items-center w-full h-full bg-amber-500">
+        <img
+          src={LogoSneaker}
+          className="md:w-1/2 lg:w-2/3 drop-shadow-2xl drop-shadow-amber-200"
+        />
+      </div>
+    </div>
+  );
 }
 
-export default Login
+export default Login;

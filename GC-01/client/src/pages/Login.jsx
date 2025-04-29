@@ -1,12 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import LogoSneaker from "../assets/logo/Logo sneaker.png";
+import useAuth from "../hook/useAuth";
 
 function Login() {
+  const { error, seterror, Login } = useAuth();
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  useEffect(() => {
+    seterror(false);
+  }, []);
   return (
-    <div className="lg:flex h-[calc(100vh-62px)]">
+    <div className="lg:flex h-[calc(100vh-66px)]">
       <div className="w-full h-full flex flex-col justify-center items-center">
-        <form className="md:w-1/2 lg:w-2/3 space-y-5">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            Login(email, password);
+          }}
+          className="md:w-1/2 lg:w-2/3 space-y-5"
+        >
           <div>
             <h1 className="text-2xl md:text-3xl xl:text-4xl font-medium">
               Login to your Account
@@ -21,7 +34,7 @@ function Login() {
                 <Label
                   htmlFor="email1"
                   className="text-xs md:text-base xl:text-lg"
-                  color="gray"
+                  color={error.email ? "failure" : "gray"}
                 >
                   Your email
                 </Label>
@@ -30,7 +43,9 @@ function Login() {
                 id="email1"
                 type="email"
                 placeholder="mail@abc.com"
-                color="gray"
+                color={error.email ? "failure" : "gray"}
+                value={email}
+                onChange={(e) => setemail(e.target.value)}
                 required
               />
             </div>
@@ -39,12 +54,19 @@ function Login() {
                 <Label
                   htmlFor="password1"
                   className="text-xs md:text-base xl:text-lg"
-                  color="gray"
+                  color={error.password ? "failure" : "gray"}
                 >
-                  password
+                  Password
                 </Label>
               </div>
-              <TextInput id="password1" type="password" color="gray" required />
+              <TextInput
+                id="password1"
+                type="password"
+                color={error.password ? "failure" : "gray"}
+                value={password}
+                onChange={(e) => setpassword(e.target.value)}
+                required
+              />
             </div>
           </div>
           <Button type="submit" className="cursor-pointer w-full">

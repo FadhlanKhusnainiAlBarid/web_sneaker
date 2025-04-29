@@ -5,26 +5,34 @@ import {
   NavbarCollapse,
   NavbarLink,
   NavbarToggle,
+  Button,
 } from "flowbite-react";
 import { Link } from "react-router-dom";
+import Logosneaker from "../assets/logo/Logo sneaker.png";
+import useAuth from "../hook/useAuth";
 
 function NavbarComp() {
+  const { Logout } = useAuth();
   return (
     <div className="border-b-2 border-gray-800">
-      <Navbar className="px-1.5 py-3 flex justify-between items-center">
+      <Navbar className="container mx-auto px-1.5 py-3 flex justify-between items-center">
         {/* <div> */}
-        <NavbarBrand as={Link} to="/">
-          <h1 className="text-2xl md:text-3xl">Sneaker</h1>
+        <NavbarBrand as={Link} to="/" className="flex items-center">
+          <img src={Logosneaker} className="w-[36px]" />
+          <h1 className="text-2xl md:text-3xl leading-1">Sneaker</h1>
         </NavbarBrand>
         {/* </div> */}
         <NavbarToggle />
-        <NavbarCollapse>
+        <NavbarCollapse className="*:flex *:items-center">
           <NavbarLink as={Link} to="/login">
             Login
           </NavbarLink>
           <NavbarLink as={Link} to="/register">
             Register
           </NavbarLink>
+          <Button className="cursor-pointer" onClick={Logout} color="red">
+            Register
+          </Button>
         </NavbarCollapse>
       </Navbar>
     </div>

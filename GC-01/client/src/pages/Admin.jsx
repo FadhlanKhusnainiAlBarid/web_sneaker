@@ -1,17 +1,17 @@
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 function Admin() {
+  const { user, loading } = useContext(AuthContext);
+
   const navigate = useNavigate();
+
   useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        navigate("/login");
-      }
-    });
-  }, [navigate]);
+    if (!user && !loading) {
+      navigate("/login");
+    }
+  }, [navigate, user, loading]);
   return <div>Admin</div>;
 }
 

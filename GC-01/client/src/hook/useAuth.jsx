@@ -24,7 +24,7 @@ function useAuthFirebase() {
         text: "Success Login account!",
         icon: "success",
       });
-      navigate("/");
+      navigate("/admin");
     } catch (error) {
       console.error(error);
       let errorMessage;

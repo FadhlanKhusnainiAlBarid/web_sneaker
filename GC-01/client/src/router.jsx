@@ -3,6 +3,8 @@ import MainLayout from "./layout/MainLayout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import AdminLayout from "./layout/AdminLayout";
+import Admin from "./pages/Admin";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: "register",
         element: <Register />,
+      },
+      {
+        path: "/admin",
+        element: <Admin />,
       },
     ],
     errorElement: <div>Oops! There was an error.</div>,

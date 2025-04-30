@@ -1,30 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import LogoSneaker from "../assets/logo/Logo sneaker.png";
 import useAuthFirebase from "../hook/useAuth";
 import { useNavigate } from "react-router-dom";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { AuthContext } from "../context/AuthContext";
 
 function Register() {
+  const { user, loading } = useContext(AuthContext);
+
   const { error, seterror, Register } = useAuthFirebase();
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [confPassword, setconfPassword] = useState("");
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     seterror(false);
   }, []);
-  const navigate = useNavigate();
+
   useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        navigate("/");
-      }
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, [navigate]);
+    if (user && !loading) {
+      navigate("/admin");
+    }
+  }, [navigate, user, loading]);
   return (
     <div className="lg:flex h-[calc(100vh-66px)]">
       <div className="hidden lg:flex lg:justify-center items-center w-full h-full bg-amber-500">

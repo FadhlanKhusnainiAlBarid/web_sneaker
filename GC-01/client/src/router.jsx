@@ -23,17 +23,12 @@ const router = createBrowserRouter([
         path: "register",
         element: <Register />,
       },
-    ],
-    errorElement: <div>Oops! There was an error.</div>,
-  },
-  {
-    element: <AdminLayout />,
-    children: [
       {
         path: "/admin",
         element: <Admin />,
       },
     ],
+    errorElement: <div>Oops! There was an error.</div>,
   },
 ]);
 

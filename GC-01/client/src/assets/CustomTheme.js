@@ -1,48 +1,51 @@
 import { createTheme } from "flowbite-react";
 
-export const TextInputTheme = createTheme({
-    "base": "flex",
-    "addon": "inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-200 px-3 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-400",
-    "field": {
-        "base": "relative w-full",
-        "icon": {
-            "base": "pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3",
-            "svg": "h-5 w-5 text-gray-500 dark:text-gray-400"
+export const CarouselTheme = createTheme({
+    "root": {
+        "base": "relative h-full w-full",
+        "leftControl": "absolute left-0 top-0 flex h-full items-center justify-center px-4 focus:outline-none",
+        "rightControl": "absolute right-0 top-0 flex h-full items-center justify-center px-4 focus:outline-none"
+    },
+    "indicators": {
+        "active": {
+            "off": "bg-white/50 hover:bg-white dark:bg-gray-800/50 dark:hover:bg-gray-800",
+            "on": "bg-white dark:bg-gray-800"
         },
-        "rightIcon": {
-            "base": "pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3",
-            "svg": "h-5 w-5 text-gray-500 dark:text-gray-400"
+        "base": "h-3 w-3 rounded-full",
+        "wrapper": "absolute bottom-5 left-1/2 flex -translate-x-1/2 space-x-3"
+    },
+    "item": {
+        "base": "absolute left-1/2 top-1/2 block w-full -translate-x-1/2 -translate-y-1/2",
+        "wrapper": {
+            "off": "w-full shrink-0 transform cursor-default snap-center",
+            "on": "w-full shrink-0 transform cursor-grab snap-center"
+        }
+    },
+    "control": {
+        "base": "inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white sm:h-10 sm:w-10 dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70",
+        "icon": "h-5 w-5 text-white sm:h-6 sm:w-6 dark:text-gray-800"
+    },
+    "scrollContainer": {
+        "base": "flex h-full snap-mandatory overflow-y-hidden overflow-x-hidden scroll-smooth rounded-none",
+        "snap": "snap-x"
+    }
+})
+
+export const CardTheme = createTheme({
+    "root": {
+        "base": "flex rounded-none border-0 border-gray-200 bg-white shadow-none dark:border-gray-700 dark:bg-gray-800",
+        "children": "flex h-fit flex-col justify-center gap-3 p-3",
+        "horizontal": {
+            "off": "flex-col",
+            "on": "flex-col md:max-w-xl md:flex-row"
         },
-        "input": {
-            "base": "block w-full border focus:outline-none focus:ring-1 disabled:cursor-not-allowed disabled:opacity-50",
-            "sizes": {
-                "sm": "p-2 sm:text-xs",
-                "md": "p-2.5 text-sm",
-                "lg": "p-4 sm:text-base"
-            },
-            "colors": {
-                "gray": "border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500",
-                "info": "border-cyan-500 bg-cyan-50 text-cyan-900 placeholder-cyan-700 focus:border-cyan-500 focus:ring-cyan-500 dark:border-cyan-400 dark:bg-cyan-100 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
-                "failure": "border-red-500 bg-red-50 text-red-900 placeholder-red-700 focus:border-red-500 focus:ring-red-500 dark:border-red-400 dark:bg-red-100 dark:focus:border-red-500 dark:focus:ring-red-500",
-                "warning": "border-yellow-500 bg-yellow-50 text-yellow-900 placeholder-yellow-700 focus:border-yellow-500 focus:ring-yellow-500 dark:border-yellow-400 dark:bg-yellow-100 dark:focus:border-yellow-500 dark:focus:ring-yellow-500",
-                "success": "border-green-500 bg-green-50 text-green-900 placeholder-green-700 focus:border-green-500 focus:ring-green-500 dark:border-green-400 dark:bg-green-100 dark:focus:border-green-500 dark:focus:ring-green-500"
-            },
-            "withRightIcon": {
-                "on": "pr-10",
-                "off": ""
-            },
-            "withIcon": {
-                "on": "pl-10",
-                "off": ""
-            },
-            "withAddon": {
-                "on": "rounded-r-lg",
-                "off": "rounded-lg"
-            },
-            "withShadow": {
-                "on": "shadow-sm dark:shadow-sm-light",
-                "off": ""
-            }
+        "href": "hover:bg-gray-100 dark:hover:bg-gray-700"
+    },
+    "img": {
+        "base": "",
+        "horizontal": {
+            "off": "rounded-t-lg",
+            "on": "h-96 w-full rounded-t-lg object-cover md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
         }
     }
 })

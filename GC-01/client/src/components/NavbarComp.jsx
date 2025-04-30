@@ -30,7 +30,7 @@ function NavbarComp() {
     };
   }, [navigate]);
   return (
-    <div className="border-b-2 border-gray-800">
+    <div className="border-b-2 border-gray-200">
       <Navbar className="container mx-auto dark:bg-gray-white px-1.5 py-3 flex justify-between items-center">
         {/* <div> */}
         <NavbarBrand as={Link} to="/" className="flex items-center">

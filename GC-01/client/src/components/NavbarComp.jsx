@@ -46,7 +46,6 @@ function NavbarComp() {
             </Button>
           ) : (
             <>
-              {" "}
               <NavbarLink as={Link} to="/login">
                 Login
               </NavbarLink>

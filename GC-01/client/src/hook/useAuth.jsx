@@ -5,7 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import auth from "../config/firebase";
+import { auth } from "../config/firebase";
 import Swal from "sweetalert2";
 
 function useAuthFirebase() {
@@ -17,8 +17,7 @@ function useAuthFirebase() {
   const navigate = useNavigate();
   const Login = async (email, password) => {
     try {
-      const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response);
+      await signInWithEmailAndPassword(auth, email, password);
       Swal.fire({
         title: "Success Login",
         text: "Success Login account!",
@@ -105,8 +104,7 @@ function useAuthFirebase() {
   };
   const Logout = async () => {
     try {
-      const response = await signOut(auth);
-      console.log(response);
+      await signOut(auth);
       navigate("/login");
     } catch (error) {
       console.error(error);

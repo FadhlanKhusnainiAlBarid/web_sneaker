@@ -17,6 +17,7 @@ function NavbarComp() {
   const { Logout } = useAuthFirebase();
   const { user } = useContext(AuthContext);
 
+  console.log(user);
   return (
     <div className="border-b-2 border-gray-200">
       <Navbar className="container mx-auto dark:bg-gray-white px-1.5 py-3 flex justify-between items-center">

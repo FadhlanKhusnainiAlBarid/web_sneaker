@@ -16,7 +16,11 @@ function Register() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    seterror(false);
+    seterror({
+      email: false,
+      password: false,
+      confPassword: false,
+    });
   }, []);
 
   useEffect(() => {

@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminLayout from "./layout/AdminLayout";
 import Admin from "./pages/Admin";
+import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter([
   {
@@ -28,7 +29,7 @@ const router = createBrowserRouter([
         element: <Admin />,
       },
     ],
-    errorElement: <div>Oops! There was an error.</div>,
+    errorElement: <ErrorPage />,
   },
 ]);
 

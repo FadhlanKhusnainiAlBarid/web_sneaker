@@ -14,7 +14,6 @@ export default function AuthContextProvider({ children }) {
     setloading(true);
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (userData) => {
-      console.log(userData);
       if (userData) {
         setuser(userData);
       } else {

@@ -26,25 +26,23 @@ function useAuthFirebase() {
       });
       navigate("/admin");
     } catch (error) {
-      console.error(error);
       let errorMessage;
       if (error.message.includes("(auth/invalid-credential)")) {
         seterror((prev) => {
           return {
             ...prev,
             password: true,
-            confPassword: true,
           };
         });
         errorMessage = "Password should be at least 6 characters!";
-      } else if (error.message.includes("(auth/email-already-in-use)")) {
+      } else if (error.message.includes("(auth/user-disabled)")) {
         seterror((prev) => {
           return {
             ...prev,
             email: true,
           };
         });
-        errorMessage = "Email has been registered, please use another email!";
+        errorMessage = "The user account has been disabled by the admin!";
       } else {
         errorMessage = error.message;
       }

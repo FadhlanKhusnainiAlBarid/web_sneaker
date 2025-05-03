@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import Logosneaker from "../assets/logo/Logo sneaker.png";
 import useAuthFirebase from "../hook/useAuth";
 import { AuthContext } from "../context/AuthContext";
+import { NavbarTheme } from "../assets/CustomTheme";
 
 function NavbarComp() {
   const { Logout } = useAuthFirebase();
@@ -19,7 +20,10 @@ function NavbarComp() {
   console.log(user);
   return (
     <div className="border-b-2 border-gray-100">
-      <Navbar className="container mx-auto dark:bg-gray-white px-1.5 py-3 flex justify-between items-center">
+      <Navbar
+        theme={NavbarTheme}
+        className="container mx-auto dark:bg-gray-white px-1.5 py-3 flex justify-between items-center"
+      >
         {/* <div> */}
         <NavbarBrand as={Link} to="/" className="flex items-center">
           <img src={Logosneaker} className="w-[36px]" />

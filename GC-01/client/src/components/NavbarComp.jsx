@@ -6,7 +6,6 @@ import {
   NavbarLink,
   NavbarToggle,
   Button,
-  createTheme,
 } from "flowbite-react";
 import { Link } from "react-router-dom";
 import Logosneaker from "../assets/logo/Logo sneaker.png";
@@ -19,7 +18,7 @@ function NavbarComp() {
 
   console.log(user);
   return (
-    <div className="border-b-2 border-gray-200">
+    <div className="border-b-2 border-gray-100">
       <Navbar className="container mx-auto dark:bg-gray-white px-1.5 py-3 flex justify-between items-center">
         {/* <div> */}
         <NavbarBrand as={Link} to="/" className="flex items-center">

@@ -1,144 +1,21 @@
-import React from "react";
-import { Carousel, Card } from "flowbite-react";
-import { CarouselTheme, CardTheme } from "../assets/CustomTheme";
+import React, { useState } from "react";
+import CardsProduct from "../components/CardsProduct";
 
 function Home() {
+  const [data, setdata] = useState([
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+  ]);
   return (
     <div className="container mx-auto space-y-6">
-      <div className="h-28 md:h-56 lg:h-72 xl:h-80">
-        <Carousel theme={CarouselTheme} slide={false}>
-          <div className="relative">
-            <img
-              className="size-full"
-              src="https://flowbite.com/docs/images/carousel/carousel-1.svg"
-              alt="..."
-            />
-          </div>
-          <div className="relative">
-            <img
-              className="size-full"
-              src="https://flowbite.com/docs/images/carousel/carousel-2.svg"
-              alt="..."
-            />
-          </div>
-          <div className="relative">
-            <img
-              className="size-full"
-              src="https://flowbite.com/docs/images/carousel/carousel-3.svg"
-              alt="..."
-            />
-          </div>
-          <div className="relative">
-            <img
-              className="size-full"
-              src="https://flowbite.com/docs/images/carousel/carousel-4.svg"
-              alt="..."
-            />
-          </div>
-          <div className="relative">
-            <img
-              className="size-full"
-              src="https://flowbite.com/docs/images/carousel/carousel-5.svg"
-              alt="..."
-            />
-          </div>
-        </Carousel>
-      </div>
-      <div className="space-y-6">
-        <h1 className="ml-6 text-2xl font-medium">Populer</h1>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1.5 lg:gap-2.5 px-0">
-          <Card
-            theme={CardTheme}
-            className="cursor-pointer max-w-sm"
-            renderImage={() => (
-              <img
-                width={500}
-                height={500}
-                src="https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/f153b4e4-9069-44ae-bf86-f70ae8ecbaa1/W+AIR+FORCE+1+%2707+FLYEASE.png"
-                alt="image 1"
-              />
-            )}
-          >
-            <div className="flex flex-col justify-center gap-2">
-              <h5 className="text-wrap line-clamp-2 text-lg font-semibold tracking-tight leading-6 text-gray-900 dark:text-dark">
-                Nike Air Force 1 '07 EasyOn
-              </h5>
-              <p className="text-wrap line-clamp-2 text-base font-medium leading-5 text-gray-700 dark:text-gray-400">
-                Here are the biggest enterprise technology acquisitions of 2021
-                so far, in reverse chronological order.
-              </p>
-            </div>
-            <p className="text-xl font-semibold mb-3">Rp 1.549.000</p>
-          </Card>
-          <Card
-            theme={CardTheme}
-            className="cursor-pointer max-w-sm"
-            renderImage={() => (
-              <img
-                width={500}
-                height={500}
-                src="https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/f153b4e4-9069-44ae-bf86-f70ae8ecbaa1/W+AIR+FORCE+1+%2707+FLYEASE.png"
-                alt="image 1"
-              />
-            )}
-          >
-            <div className="flex flex-col justify-center gap-2">
-              <h5 className="text-wrap line-clamp-2 text-lg font-semibold tracking-tight leading-6 text-gray-900 dark:text-dark">
-                Nike Air Force 1 '07 EasyOn
-              </h5>
-              <p className="text-wrap line-clamp-2 text-base font-medium leading-5 text-gray-700 dark:text-gray-400">
-                Here are the biggest enterprise technology acquisitions of 2021
-                so far, in reverse chronological order.
-              </p>
-            </div>
-            <p className="text-xl font-semibold mb-3">Rp 1.549.000</p>
-          </Card>
-          <Card
-            theme={CardTheme}
-            className="cursor-pointer max-w-sm"
-            renderImage={() => (
-              <img
-                width={500}
-                height={500}
-                src="https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/f153b4e4-9069-44ae-bf86-f70ae8ecbaa1/W+AIR+FORCE+1+%2707+FLYEASE.png"
-                alt="image 1"
-              />
-            )}
-          >
-            <div className="flex flex-col justify-center gap-2">
-              <h5 className="text-wrap line-clamp-2 text-lg font-semibold tracking-tight leading-6 text-gray-900 dark:text-dark">
-                Nike Air Force 1 '07 EasyOn
-              </h5>
-              <p className="text-wrap line-clamp-2 text-base font-medium leading-5 text-gray-700 dark:text-gray-400">
-                Here are the biggest enterprise technology acquisitions of 2021
-                so far, in reverse chronological order.
-              </p>
-            </div>
-            <p className="text-xl font-semibold mb-3">Rp 1.549.000</p>
-          </Card>
-          <Card
-            theme={CardTheme}
-            className="cursor-pointer max-w-sm"
-            renderImage={() => (
-              <img
-                width={500}
-                height={500}
-                src="https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/f153b4e4-9069-44ae-bf86-f70ae8ecbaa1/W+AIR+FORCE+1+%2707+FLYEASE.png"
-                alt="image 1"
-              />
-            )}
-          >
-            <div className="flex flex-col justify-center gap-2">
-              <h5 className="text-wrap line-clamp-2 text-lg font-semibold tracking-tight leading-6 text-gray-900 dark:text-dark">
-                Nike Air Force 1 '07 EasyOn
-              </h5>
-              <p className="text-wrap line-clamp-2 text-base font-medium leading-5 text-gray-700 dark:text-gray-400">
-                Here are the biggest enterprise technology acquisitions of 2021
-                so far, in reverse chronological order.
-              </p>
-            </div>
-            <p className="text-xl font-semibold mb-3">Rp 1.549.000</p>
-          </Card>
+      <div className="space-y-3">
+        <div className="sticky top-0 z-10 bg-white py-1">
+          <h1 className="ml-6 text-lg font-medium">Populer</h1>
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-1.5 lg:gap-2.5 px-0">
+          {data.map((d) => (
+            <CardsProduct key={d} />
+          ))}
+          <div className="mb-12" />
         </div>
       </div>
     </div>

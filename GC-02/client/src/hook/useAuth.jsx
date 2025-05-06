@@ -4,8 +4,9 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  signInWithPopup,
 } from "firebase/auth";
-import { auth } from "../config/firebase";
+import { auth, provider } from "../config/firebase";
 import Swal from "sweetalert2";
 
 function useAuthFirebase() {
@@ -111,7 +112,21 @@ function useAuthFirebase() {
     }
   };
 
-  return { error, seterror, Login, Register, Logout };
+  const handleLoginGoogle = async () => {
+    try {
+      await signInWithPopup(auth, provider);
+      Swal.fire({
+        title: "Success Login",
+        text: "Success Login account!",
+        icon: "success",
+      });
+      navigate("/admin");
+    } catch (error) {
+      console.log(error.code);
+    }
+  };
+
+  return { error, seterror, Login, Register, Logout, handleLoginGoogle };
 }
 
 export default useAuthFirebase;

@@ -8,7 +8,7 @@ import { AuthContext } from "../context/AuthContext";
 function Login() {
   const { user, loading } = useContext(AuthContext);
 
-  const { error, seterror, Login } = useAuthFirebase();
+  const { error, seterror, Login, handleLoginGoogle } = useAuthFirebase();
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
 
@@ -86,8 +86,19 @@ function Login() {
               />
             </div>
           </div>
-          <Button type="submit" className="cursor-pointer w-full">
+          <Button type="submit" className="cursor-pointer w-full h-12 text-lg">
             Login
+          </Button>
+          <Button
+            onClick={handleLoginGoogle}
+            className="flex cursor-pointer w-full h-12 text-lg gap-1.5"
+          >
+            <img
+              className="w-9 drop-shadow-sm drop-shadow-black/50"
+              src="https://img.icons8.com/?size=512&id=V5cGWnc9R4xj&format=png"
+              alt="google icon"
+            />
+            Login with Google
           </Button>
         </form>
       </div>

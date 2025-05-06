@@ -16,8 +16,6 @@ import { NavbarTheme } from "../assets/CustomTheme";
 function NavbarComp() {
   const { Logout } = useAuthFirebase();
   const { user } = useContext(AuthContext);
-
-  console.log(user);
   return (
     <div className="border-b-2 border-gray-100">
       <Navbar

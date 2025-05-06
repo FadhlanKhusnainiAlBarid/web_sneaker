@@ -17,7 +17,7 @@ function CardsProduct() {
       )}
     >
       <div className="flex flex-col justify-center gap-2">
-        <h5 className="text-wrap line-clamp-2 text-base font-semibold leading-6 text-gray-900 dark:text-dark">
+        <h5 className="text-wrap line-clamp-2 text-base lg:text-lg font-semibold leading-6 text-gray-900 dark:text-dark">
           Nike Air Force 1 '07 EasyOn
         </h5>
         <p className="text-wrap line-clamp-2 text-base font-medium leading-5 text-gray-700 dark:text-gray-400">

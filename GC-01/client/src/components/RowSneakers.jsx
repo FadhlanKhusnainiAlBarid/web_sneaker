@@ -28,10 +28,6 @@ function RowSneakers() {
         Blue upper with flashy Metallic Gold accents for an eye-catching finish.
       </td>
       <td className="w-24">200000</td>
-      <td className="w-24 space-y-2">
-        <Button>c</Button>
-        <Button>c</Button>
-      </td>
     </tr>
   );
 }

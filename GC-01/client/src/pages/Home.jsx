@@ -11,7 +11,7 @@ function Home() {
         <div className="sticky top-0 z-10 bg-white py-1">
           <h1 className="ml-6 text-lg font-medium">Populer</h1>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-1.5 lg:gap-2.5 px-0">
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1.5 lg:gap-2.5 px-0">
           {data.map((d) => (
             <CardsProduct key={d} />
           ))}

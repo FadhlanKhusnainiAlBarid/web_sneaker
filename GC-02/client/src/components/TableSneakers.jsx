@@ -1,6 +1,6 @@
 import React from "react";
 import RowSneakers from "./RowSneakers";
-import { Button } from "flowbite-react";
+import { Button, Checkbox } from "flowbite-react";
 
 function TableSneakers() {
   return (
@@ -12,9 +12,12 @@ function TableSneakers() {
           <Button color="red">c</Button>
         </div>
       </div>
-      <table className="min-w-[768px] table-auto">
+      <table className="w-full min-w-[768px] table-auto">
         <thead>
-          <tr className="*:bg-blue-100/60 *:text-blue-600 *:text-start *:text-xl *:pl-2 md:*:pl-4 *:py-2.5 border-t-2 border-blue-300">
+          <tr className="*:bg-blue-100/60 *:text-blue-600 *:text-start *:text-2xl *:font-medium *:pl-2 md:*:pl-4 *:py-2.5 border-t-2 border-blue-300">
+            <th>
+              <Checkbox className="p-4" />
+            </th>
             <th>No</th>
             <th>Name</th>
             <th>Image</th>

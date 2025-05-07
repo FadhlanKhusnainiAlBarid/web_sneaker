@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import TableSneakers from "../components/TableSneakers";
+import EnhancedTable from "../components/EnhancedTable";
 
 function Admin() {
   const { user, loading } = useContext(AuthContext);
@@ -16,7 +17,8 @@ function Admin() {
   return (
     <div className="container mx-auto space-y-3 md:space-y-6">
       <h1 className="text-2xl font-bold ml-5 md:ml-12 mt-3 md:mt-6">SNKRS</h1>
-      <TableSneakers />
+      {/* <TableSneakers /> */}
+      <EnhancedTable />
     </div>
   );
 }

@@ -22,6 +22,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 
+// import for data firestore handling
+import { db } from "../config/firebase";
+import { collection, getDocs } from "firebase/firestore";
+
 function createData(id, name, imageUrl, docs, price) {
   return {
     id,
@@ -210,11 +214,11 @@ function EnhancedTableHead(props) {
               onClick={createSortHandler(headCell.id)}
             > */}
             {headCell.label}
-            {/* {orderBy === headCell.id ? (
+            {orderBy === headCell.id ? (
               <Box component="span" sx={visuallyHidden}>
                 {order === "desc" ? "sorted descending" : "sorted ascending"}
               </Box>
-            ) : null} */}
+            ) : null}
             {/* </TableSortLabel> */}
           </TableCell>
         ))}
@@ -290,9 +294,10 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-let USDollar = new Intl.NumberFormat("en-US", {
+let Rupiah = new Intl.NumberFormat("id-ID", {
   style: "currency",
-  currency: "USD",
+  currency: "IDR",
+  minimumFractionDigits: 0,
 });
 
 export default function EnhancedTable() {
@@ -302,6 +307,9 @@ export default function EnhancedTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  // code fetch firestore
+  const [snkrs, setfirst] = React.useState([]);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -310,12 +318,17 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = snkrs?.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
+
+  // check perubahan selected
+  React.useEffect(() => {
+    console.log(selected, "check perubahan selected row");
+  }, [selected]);
 
   const handleClick = (event, id) => {
     const selectedIndex = selected.indexOf(id);
@@ -347,15 +360,35 @@ export default function EnhancedTable() {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - snkrs?.length) : 0;
 
   const visibleRows = React.useMemo(
     () =>
-      [...rows]
+      [...snkrs]
         .sort(getComparator(order, orderBy))
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, page, rowsPerPage, snkrs]
   );
+
+  React.useEffect(() => {
+    const fetchSnkrs = async () => {
+      try {
+        const response = await getDocs(collection(db, "sneakers"));
+        const data = response.docs.map((doc) => {
+          return {
+            id: doc.id,
+            ...doc.data(),
+          };
+        });
+        console.log(data);
+        setfirst(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchSnkrs();
+  }, []);
+  // end code fetch firestore
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -368,15 +401,15 @@ export default function EnhancedTable() {
             size="medium"
           >
             <EnhancedTableHead
-            // numSelected={selected.length}
-            // order={order}
-            // orderBy={orderBy}
-            // onSelectAllClick={handleSelectAllClick}
-            // onRequestSort={handleRequestSort}
-            // rowCount={rows.length}
+              numSelected={selected.length}
+              // order={order}
+              // orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              // onRequestSort={handleRequestSort}
+              rowCount={snkrs?.length}
             />
             <TableBody>
-              {visibleRows.map((row, index) => {
+              {visibleRows?.map((row, index) => {
                 const isItemSelected = selected.includes(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -410,10 +443,10 @@ export default function EnhancedTable() {
                       {row.name}
                     </TableCell>
                     <TableCell padding="none" className="w-24">
-                      <img src={row.imageUrl} alt="" />
+                      <img src={row.image.color_1[0]} alt="" />
                     </TableCell>
                     <TableCell>{row.docs}</TableCell>
-                    <TableCell>{USDollar.format(row.price)}</TableCell>
+                    <TableCell>{Rupiah.format(row.price)}</TableCell>
                   </TableRow>
                 );
               })}
@@ -432,7 +465,7 @@ export default function EnhancedTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={snkrs?.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

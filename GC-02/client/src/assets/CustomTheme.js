@@ -34,7 +34,7 @@ export const CarouselTheme = createTheme({
 export const CardTheme = createTheme({
     "root": {
         "base": "flex rounded-none border-0 border-gray-200 bg-white shadow-none dark:border-gray-700 dark:bg-white",
-        "children": "flex h-fit flex-col justify-center gap-3 p-3",
+        "children": "flex h-fit flex-col justify-center gap-3.5 px-0 py-3",
         "horizontal": {
             "off": "flex-col",
             "on": "flex-col md:max-w-xl md:flex-row"

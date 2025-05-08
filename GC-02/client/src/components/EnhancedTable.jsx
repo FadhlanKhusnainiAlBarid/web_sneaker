@@ -20,11 +20,12 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import AddIcon from "@mui/icons-material/Add";
 import { visuallyHidden } from "@mui/utils";
 
-// import for data firestore handling
-import { db } from "../config/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSnkrs } from "../app/actions";
+import { Link } from "react-router-dom";
 
 function createData(id, name, imageUrl, docs, price) {
   return {
@@ -280,11 +281,13 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <Link to="/add_sneaker">
+          <Tooltip title="Add Snkr">
+            <IconButton>
+              <AddIcon />
+            </IconButton>
+          </Tooltip>
+        </Link>
       )}
     </Toolbar>
   );
@@ -301,14 +304,14 @@ let Rupiah = new Intl.NumberFormat("id-ID", {
 });
 
 export default function EnhancedTable() {
+  const dispatch = useDispatch();
+  const { snkrs } = useSelector((state) => state.snkrs);
+
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  // code fetch firestore
-  const [snkrs, setfirst] = React.useState([]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -371,23 +374,8 @@ export default function EnhancedTable() {
   );
 
   React.useEffect(() => {
-    const fetchSnkrs = async () => {
-      try {
-        const response = await getDocs(collection(db, "sneakers"));
-        const data = response.docs.map((doc) => {
-          return {
-            id: doc.id,
-            ...doc.data(),
-          };
-        });
-        console.log(data);
-        setfirst(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchSnkrs();
-  }, []);
+    dispatch(fetchSnkrs());
+  }, [dispatch]);
   // end code fetch firestore
 
   return (

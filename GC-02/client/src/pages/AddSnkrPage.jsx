@@ -9,7 +9,7 @@ function AddSnkrPage() {
   const [image, setimage] = useState([["", ""]]);
 
   const [selectColor, setselectColor] = useState(0);
-  const [selectImage, setselectImage] = useState([0, 1]);
+  const [selectImage, setselectImage] = useState(1);
 
   const handleAddImage = (key, index, value) => {
     const newData = image.map((data, i) => {
@@ -43,6 +43,10 @@ function AddSnkrPage() {
   };
 
   const handleDeleteInputColor = () => {
+    if (image[image.length - 1].length == 1) {
+      setselectColor(0);
+      setselectImage(1);
+    }
     setimage((prev) => {
       return prev.slice(0, -1);
     });
@@ -83,11 +87,8 @@ function AddSnkrPage() {
         >
           <div>
             <h1 className="text-2xl md:text-3xl xl:text-4xl font-medium">
-              Login to your Account
+              Add New SNKR
             </h1>
-            <p className="text-xs dark:text-black md:text-base xl:text-lg">
-              See what is going on with your business
-            </p>
           </div>
           <div className="space-y-3">
             {/* input name */}
@@ -281,7 +282,10 @@ function AddSnkrPage() {
           {image.map((data, i) => (
             <button
               type="button"
-              onClick={() => setselectColor(i)}
+              onClick={() => {
+                setselectColor(i);
+                setselectImage(1);
+              }}
               key={i}
               className={`${
                 data[0] == ""
@@ -310,7 +314,7 @@ function AddSnkrPage() {
                 {image[selectColor].slice(1).map((data, i) => (
                   <button
                     type="button"
-                    onMouseEnter={() => setselectImage([selectColor, i + 1])}
+                    onMouseEnter={() => setselectImage(i + 1)}
                     key={i}
                     className={`relative ${
                       data == ""
@@ -318,7 +322,7 @@ function AddSnkrPage() {
                         : "cursor-pointer overflow-hidden size-14 rounded"
                     }`}
                   >
-                    {selectImage[1] === i + 1 && (
+                    {selectImage === i + 1 && (
                       <div className="absolute size-full bg-black/40" />
                     )}
                     <img className="size-14" src={data} alt="" />
@@ -328,10 +332,10 @@ function AddSnkrPage() {
             )}
           </div>
           <div className="w-full">
-            {image[selectColor][selectImage[1]] === "" ? (
+            {image[selectColor][selectImage] === "" ? (
               <div className="animate-pulse w-full h-96 rounded bg-gray-400"></div>
             ) : (
-              <img src={image[selectColor][selectImage[1]]} alt="" />
+              <img src={image[selectColor][selectImage]} alt="" />
             )}
           </div>
         </div>

@@ -6,6 +6,7 @@ import Register from "./pages/RegisterPage";
 import AdminLayout from "./layout/AdminLayout";
 import Admin from "./pages/AdminPage";
 import ErrorPage from "./pages/ErrorPage";
+import AddSnkrPage from "./pages/AddSnkrPage";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "/admin",
         element: <Admin />,
+      },
+      {
+        path: "/add_sneaker",
+        element: <AddSnkrPage />,
       },
     ],
     errorElement: <ErrorPage />,

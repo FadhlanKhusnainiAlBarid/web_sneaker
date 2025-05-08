@@ -160,10 +160,10 @@ const headCells = [
     label: "image",
   },
   {
-    id: "decs",
+    id: "docs",
     numeric: false,
     disablePadding: false,
-    label: "decs",
+    label: "docs",
   },
   {
     id: "price",

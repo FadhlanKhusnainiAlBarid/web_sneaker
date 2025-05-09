@@ -31,9 +31,14 @@ function NavbarComp() {
         <NavbarToggle />
         <NavbarCollapse className="*:flex *:items-center">
           {user ? (
-            <Button className="cursor-pointer" onClick={Logout} color="red">
-              Logout
-            </Button>
+            <>
+              <NavbarLink as={Link} to="/admin">
+                admin
+              </NavbarLink>
+              <Button className="cursor-pointer" onClick={Logout} color="red">
+                Logout
+              </Button>
+            </>
           ) : (
             <>
               <NavbarLink as={Link} to="/login">

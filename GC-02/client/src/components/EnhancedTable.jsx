@@ -25,8 +25,9 @@ import EditDocumentIcon from "@mui/icons-material/EditDocument";
 import { visuallyHidden } from "@mui/utils";
 
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSnkrs } from "../app/actions";
+import { deleteSnkr, fetchSnkrs } from "../app/actions";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function createData(id, name, imageUrl, information, price) {
   return {
@@ -210,18 +211,40 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             {/* icons sortable in thead */}
-            {/* <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            > */}
-            {headCell.label}
+            {headCell.price ? (
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            ) : (
+              <>
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </>
+            )}
+
+            {/* {headCell.label}
             {orderBy === headCell.id ? (
               <Box component="span" sx={visuallyHidden}>
                 {order === "desc" ? "sorted descending" : "sorted ascending"}
               </Box>
-            ) : null}
-            {/* </TableSortLabel> */}
+            ) : null} */}
           </TableCell>
         ))}
       </TableRow>
@@ -239,7 +262,30 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, selected, setSelected } = props;
+  const dispatch = useDispatch();
+
+  const handleDelete = async () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You will not be able to restore these ${numSelected} data!`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteSnkr(selected));
+        setSelected([]);
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success",
+        });
+      }
+    });
+  };
   return (
     <Toolbar
       sx={[
@@ -283,7 +329,7 @@ function EnhancedTableToolbar(props) {
         </Tooltip>
       )}
       {numSelected > 0 ? (
-        <Tooltip title="Delete Document">
+        <Tooltip onClick={handleDelete} title="Delete Document">
           <IconButton>
             <DeleteIcon />
           </IconButton>
@@ -303,6 +349,7 @@ function EnhancedTableToolbar(props) {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  selected: PropTypes.array.isRequired,
 };
 
 let Rupiah = new Intl.NumberFormat("id-ID", {
@@ -384,7 +431,11 @@ export default function EnhancedTable() {
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          selected={selected}
+          setSelected={setSelected}
+        />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -444,7 +495,7 @@ export default function EnhancedTable() {
                           {row.name}
                         </TableCell>
                         <TableCell padding="none" className="w-24">
-                          <img src={row.image.color_1[0]} alt="" />
+                          <img src={row.image?.color_1[0] || null} />
                         </TableCell>
                         <TableCell>{row.information}</TableCell>
                         <TableCell>{Rupiah.format(row.price)}</TableCell>

@@ -5,6 +5,7 @@ import { addSnkr } from "../app/actions";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import UploadWidget from "../components/UploadWidget";
+import Tooltip from "@mui/material/Tooltip";
 
 function AddSnkrPage() {
   const dispatch = useDispatch();
@@ -90,7 +91,7 @@ function AddSnkrPage() {
         return;
       }
 
-      if (queryResult.price.includes(".") || queryResult.price.includes(",")) {
+      if (/\D/.test(queryResult.price)) {
         errorMessage = "Price data all characters must be numbers";
         Swal.fire({
           title: "Status Add",
@@ -160,6 +161,8 @@ function AddSnkrPage() {
             handleAdd();
           }}
           className="space-y-5"
+          oninvalid="Please cnknkcndk."
+          oninput="this.setCustomValidity('')"
         >
           <div>
             <h1 className="text-2xl md:text-3xl xl:text-4xl font-medium">
@@ -250,7 +253,7 @@ function AddSnkrPage() {
                           <div key={index}>
                             <div className="mb-1 block">
                               <Label
-                                htmlFor="nomor0"
+                                htmlFor={`color${i}image${index}`}
                                 className="text-xs dark:text-black md:text-base xl:text-lg"
                                 // color={error.password ? "failure" : "gray"}
                               >
@@ -258,15 +261,17 @@ function AddSnkrPage() {
                               </Label>
                             </div>
                             <div className="flex gap-2">
-                              <TextInput
-                                className="w-full"
-                                id="nomor0"
-                                type="text"
-                                // color={error.password ? "failure" : "gray"}
-                                value={data}
-                                required={true}
-                                readOnly
-                              />
+                              <Tooltip title="Please upload image to fill this field.">
+                                <TextInput
+                                  className="w-full"
+                                  id={`color${i}image${index}`}
+                                  type="text"
+                                  // color={error.password ? "failure" : "gray"}
+                                  value={data}
+                                  required
+                                  aria-disabled
+                                />
+                              </Tooltip>
                               <UploadWidget
                                 ky={i}
                                 index={index}

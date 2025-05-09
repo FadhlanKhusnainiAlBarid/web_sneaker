@@ -6,6 +6,7 @@ import {
   updateDoc,
   deleteDoc,
   doc,
+  getDoc,
 } from "firebase/firestore";
 import { setSnkrs, setSnkr, setLoading } from "./sneakerSlice";
 
@@ -27,6 +28,18 @@ export const fetchSnkrs = () => async (dispatch) => {
   }
 };
 
+export const fetchSnkr = (id) => async (dispatch) => {
+  try {
+    dispatch(setLoading(true));
+    const response = await getDoc(doc(db, "sneakers", id));
+    dispatch(setSnkr(response.data()));
+  } catch (error) {
+    console.error(error);
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
 export const addSnkr = (product) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
@@ -39,7 +52,10 @@ export const addSnkr = (product) => async (dispatch) => {
   }
 };
 
-export const editSnkr = () => async (dispatch) => {};
+export const editSnkr = () => async (dispatch) => {
+  try {
+  } catch (error) {}
+};
 
 export const deleteSnkr = (arrayId) => async (dispatch) => {
   try {

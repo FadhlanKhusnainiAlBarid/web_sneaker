@@ -322,11 +322,13 @@ function EnhancedTableToolbar(props) {
         </Typography>
       )}
       {numSelected == 1 && (
-        <Tooltip title="Edite Document">
-          <IconButton>
-            <EditDocumentIcon />
-          </IconButton>
-        </Tooltip>
+        <Link to={`/edit_sneaker/${selected}`}>
+          <Tooltip title="Edite Document">
+            <IconButton>
+              <EditDocumentIcon />
+            </IconButton>
+          </Tooltip>
+        </Link>
       )}
       {numSelected > 0 ? (
         <Tooltip onClick={handleDelete} title="Delete Document">

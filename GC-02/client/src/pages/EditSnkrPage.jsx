@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Button, Label, Select, TextInput, HR, Textarea } from "flowbite-react";
 import { useDispatch } from "react-redux";
 import { addSnkr } from "../app/actions";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
-function AddSnkrPage() {
+function EditSnkrPage() {
+  const { id } = useParams();
+
   const dispatch = useDispatch();
   const [name, setname] = useState("");
   const [information, setinformation] = useState("");
@@ -58,6 +60,8 @@ function AddSnkrPage() {
       return prev.slice(0, -1);
     });
   };
+
+  useEffect(() => {}, []);
 
   const handleData = () => {
     const queryResults = {};
@@ -425,4 +429,4 @@ function AddSnkrPage() {
   );
 }
 
-export default AddSnkrPage;
+export default EditSnkrPage;

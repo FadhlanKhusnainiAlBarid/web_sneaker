@@ -21,18 +21,19 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import AddIcon from "@mui/icons-material/Add";
+import EditDocumentIcon from "@mui/icons-material/EditDocument";
 import { visuallyHidden } from "@mui/utils";
 
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSnkrs } from "../app/actions";
 import { Link } from "react-router-dom";
 
-function createData(id, name, imageUrl, docs, price) {
+function createData(id, name, imageUrl, information, price) {
   return {
     id,
     name,
     imageUrl,
-    docs,
+    information,
     price,
   };
 }
@@ -161,10 +162,10 @@ const headCells = [
     label: "image",
   },
   {
-    id: "docs",
+    id: "information",
     numeric: false,
     disablePadding: false,
-    label: "docs",
+    label: "information",
   },
   {
     id: "price",
@@ -274,8 +275,15 @@ function EnhancedTableToolbar(props) {
           Table
         </Typography>
       )}
+      {numSelected == 1 && (
+        <Tooltip title="Edite Document">
+          <IconButton>
+            <EditDocumentIcon />
+          </IconButton>
+        </Tooltip>
+      )}
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
+        <Tooltip title="Delete Document">
           <IconButton>
             <DeleteIcon />
           </IconButton>
@@ -305,7 +313,7 @@ let Rupiah = new Intl.NumberFormat("id-ID", {
 
 export default function EnhancedTable() {
   const dispatch = useDispatch();
-  const { snkrs } = useSelector((state) => state.snkrs);
+  const { snkrs, isLoading } = useSelector((state) => state.snkrs);
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -327,11 +335,6 @@ export default function EnhancedTable() {
     }
     setSelected([]);
   };
-
-  // check perubahan selected
-  React.useEffect(() => {
-    console.log(selected, "check perubahan selected row");
-  }, [selected]);
 
   const handleClick = (event, id) => {
     const selectedIndex = selected.indexOf(id);
@@ -397,47 +400,59 @@ export default function EnhancedTable() {
               rowCount={snkrs?.length}
             />
             <TableBody>
-              {visibleRows?.map((row, index) => {
-                const isItemSelected = selected.includes(row.id);
-                const labelId = `enhanced-table-checkbox-${index}`;
+              {isLoading ? (
+                <TableRow
+                  style={{
+                    height: 53 * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={6} />
+                </TableRow>
+              ) : (
+                <>
+                  {visibleRows?.map((row, index) => {
+                    const isItemSelected = selected.includes(row.id);
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                return (
-                  <TableRow
-                    className="odd:bg-gray-50 flex items-start"
-                    hover
-                    onClick={(event) => handleClick(event, row.id)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                      {row.name}
-                    </TableCell>
-                    <TableCell padding="none" className="w-24">
-                      <img src={row.image.color_1[0]} alt="" />
-                    </TableCell>
-                    <TableCell>{row.docs}</TableCell>
-                    <TableCell>{Rupiah.format(row.price)}</TableCell>
-                  </TableRow>
-                );
-              })}
+                    return (
+                      <TableRow
+                        className="odd:bg-gray-50 flex items-start"
+                        hover
+                        onClick={(event) => handleClick(event, row.id)}
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.id}
+                        selected={isItemSelected}
+                        sx={{ cursor: "pointer" }}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                              "aria-labelledby": labelId,
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                        >
+                          {row.name}
+                        </TableCell>
+                        <TableCell padding="none" className="w-24">
+                          <img src={row.image.color_1[0]} alt="" />
+                        </TableCell>
+                        <TableCell>{row.information}</TableCell>
+                        <TableCell>{Rupiah.format(row.price)}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </>
+              )}
               {emptyRows > 0 && (
                 <TableRow
                   style={{

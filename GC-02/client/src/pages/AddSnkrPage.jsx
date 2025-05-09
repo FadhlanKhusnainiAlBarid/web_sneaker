@@ -1,15 +1,22 @@
-import { Button, Label, Select, TextInput, HR, Textarea } from "flowbite-react";
 import React, { useEffect, useState } from "react";
+import { Button, Label, Select, TextInput, HR, Textarea } from "flowbite-react";
+import { useDispatch } from "react-redux";
+import { addSnkr } from "../app/actions";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function AddSnkrPage() {
+  const dispatch = useDispatch();
   const [name, setname] = useState("");
-  const [docs, setdocs] = useState("");
+  const [information, setinformation] = useState("");
   const [price, setprice] = useState("");
   const [status, setstatus] = useState("Men's Shoes");
   const [image, setimage] = useState([["", ""]]);
 
   const [selectColor, setselectColor] = useState(0);
   const [selectImage, setselectImage] = useState(1);
+
+  const navigate = useNavigate();
 
   const handleAddImage = (key, index, value) => {
     const newData = image.map((data, i) => {
@@ -52,10 +59,10 @@ function AddSnkrPage() {
     });
   };
 
-  const handleAdd = () => {
+  const handleData = () => {
     const queryResults = {};
     queryResults.name = name;
-    queryResults.docs = docs;
+    queryResults.information = information;
     queryResults.price = price;
     queryResults.price = price;
     image.map((d, i) => {
@@ -66,7 +73,74 @@ function AddSnkrPage() {
             [`color_${i + 1}`]: d,
           });
     });
-    console.log(queryResults);
+
+    return queryResults;
+  };
+
+  const handleAdd = async () => {
+    try {
+      const queryResult = handleData();
+      let errorMessage;
+
+      if (queryResult.name <= 4) {
+        errorMessage = "data name should be more than 4 characters";
+        Swal.fire({
+          title: "Status Add",
+          text: `${errorMessage}`,
+          icon: "error",
+        });
+        return;
+      }
+
+      if (queryResult.price.includes(".") || queryResult.price.includes(",")) {
+        errorMessage = "Price data all characters must be numbers";
+        Swal.fire({
+          title: "Status Add",
+          text: `${errorMessage}`,
+          icon: "error",
+        });
+        return;
+      }
+
+      for (const [key, value] of Object.entries(queryResult.image)) {
+        if (value.length == 1) {
+          errorMessage = `Images ${key.replace(
+            "_",
+            " "
+          )} data must have at least 2 image`;
+          Swal.fire({
+            title: "Status Add",
+            text: `${errorMessage}`,
+            icon: "error",
+          });
+          return;
+        }
+      }
+
+      if (queryResult.information.length < 10) {
+        errorMessage = "data information should be more than 10 characters";
+        Swal.fire({
+          title: "Status Add",
+          text: `${errorMessage}`,
+          icon: "error",
+        });
+        return;
+      }
+
+      dispatch(addSnkr(handleData()));
+      Swal.fire({
+        title: "Status Add",
+        text: "Success Add Sneaker!",
+        icon: "success",
+      });
+      navigate("/admin");
+    } catch (error) {
+      Swal.fire({
+        title: "Status Add",
+        text: `;`,
+        icon: "error",
+      });
+    }
   };
 
   let Rupiah = new Intl.NumberFormat("id-ID", {
@@ -243,8 +317,8 @@ function AddSnkrPage() {
                 id="comment"
                 placeholder="Leave a comment..."
                 // color={error.password ? "failure" : "gray"}
-                value={docs}
-                onChange={(e) => setdocs(e.target.value)}
+                value={information}
+                onChange={(e) => setinformation(e.target.value)}
                 required
                 rows={4}
               />
@@ -299,37 +373,35 @@ function AddSnkrPage() {
             </button>
           ))}
         </div>
-        <div className="mt-6 flex justify-between gap-3.5">
+        <div className="h-fit mt-6 flex justify-between gap-3.5">
           <div
-            className={`flex flex-col ${
-              image[selectColor].slice(1).length > 6
-                ? "w-24 overflow-auto"
-                : "w-fit"
-            } h-96 gap-1.5`}
+            className={`h-[832.500px] flex flex-col flex-nowrap w-25 overflow-y-auto gap-1.5`}
           >
-            {image[selectColor].slice(1) == "" ? (
-              <div className="animate-pulse size-14 rounded bg-gray-400"></div>
-            ) : (
-              <>
-                {image[selectColor].slice(1).map((data, i) => (
-                  <button
-                    type="button"
-                    onMouseEnter={() => setselectImage(i + 1)}
-                    key={i}
-                    className={`relative ${
-                      data == ""
-                        ? "animate-pulse size-14 rounded bg-gray-400"
-                        : "cursor-pointer overflow-hidden size-14 rounded"
-                    }`}
-                  >
-                    {selectImage === i + 1 && (
-                      <div className="absolute size-full bg-black/40" />
-                    )}
-                    <img className="size-14" src={data} alt="" />
-                  </button>
-                ))}
-              </>
-            )}
+            <div className="h-fit">
+              {image[selectColor].slice(1) == "" ? (
+                <div className="animate-pulse size-14 rounded bg-gray-400"></div>
+              ) : (
+                <>
+                  {image[selectColor].slice(1).map((data, i) => (
+                    <button
+                      type="button"
+                      onMouseEnter={() => setselectImage(i + 1)}
+                      key={i}
+                      className={`relative size-14 ${
+                        data == ""
+                          ? "animate-pulse rounded bg-gray-400"
+                          : "cursor-pointer overflow-hidden rounded"
+                      }`}
+                    >
+                      {selectImage === i + 1 && (
+                        <div className="absolute size-full bg-black/40" />
+                      )}
+                      <img className="size-14" src={data} alt="" />
+                    </button>
+                  ))}
+                </>
+              )}
+            </div>
           </div>
           <div className="w-full">
             {image[selectColor][selectImage] === "" ? (
@@ -340,11 +412,11 @@ function AddSnkrPage() {
           </div>
         </div>
         <div className="mt-3">
-          {docs == "" ? (
+          {information == "" ? (
             <div className="animate-pulse w-full h-60 rounded bg-gray-400"></div>
           ) : (
             <p className="text-xl font-medium text-black dark:text-black">
-              {docs}
+              {information}
             </p>
           )}
         </div>

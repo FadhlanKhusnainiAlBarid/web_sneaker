@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { addSnkr } from "../app/actions";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import UploadWidget from "../components/UploadWidget";
 
 function AddSnkrPage() {
   const dispatch = useDispatch();
@@ -19,14 +20,11 @@ function AddSnkrPage() {
   const navigate = useNavigate();
 
   const handleAddImage = (key, index, value) => {
-    const newData = image.map((data, i) => {
-      return i === key
-        ? data.map((d, i) => {
-            return i === index ? value : d;
-          })
-        : data;
-    });
-    setimage(newData);
+    setimage((prev) =>
+      prev.map((data, i) =>
+        i === key ? data.map((d, j) => (j === index ? value : d)) : data
+      )
+    );
   };
 
   const handleAddInputImage = (index) => {
@@ -149,6 +147,10 @@ function AddSnkrPage() {
     minimumFractionDigits: 0,
   });
 
+  useEffect(() => {
+    console.log(image);
+  }, [image]);
+
   return (
     <div className="container mx-auto flex flex-col lg:flex-row lg:justify-between">
       <div className="size-full p-4">
@@ -255,16 +257,24 @@ function AddSnkrPage() {
                                 Image {index + 1}
                               </Label>
                             </div>
-                            <TextInput
-                              id="nomor0"
-                              type="text"
-                              // color={error.password ? "failure" : "gray"}
-                              value={data}
-                              onChange={(e) =>
-                                handleAddImage(i, index, e.target.value)
-                              }
-                              required
-                            />
+                            <div className="flex gap-2">
+                              <TextInput
+                                className="w-full"
+                                id="nomor0"
+                                type="text"
+                                // color={error.password ? "failure" : "gray"}
+                                value={data}
+                                required={true}
+                                readOnly
+                              />
+                              <UploadWidget
+                                ky={i}
+                                index={index}
+                                image={image}
+                                setimage={setimage}
+                                handleAddImage={handleAddImage}
+                              />
+                            </div>
                           </div>
                         ))}
                         <div className="flex gap-3">
@@ -272,7 +282,7 @@ function AddSnkrPage() {
                             onClick={() => handleAddInputImage(i)}
                             className="cursor-pointer"
                             type="button"
-                            color="alternative"
+                            color="light"
                           >
                             Add Image
                           </Button>
@@ -281,7 +291,7 @@ function AddSnkrPage() {
                             onClick={() => handleDeleteInputImage(i)}
                             className="cursor-pointer"
                             type="button"
-                            color="alternative"
+                            color="light"
                           >
                             Delete Image
                           </Button>

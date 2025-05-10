@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Button, Label, Select, TextInput, HR, Textarea } from "flowbite-react";
-import { useDispatch } from "react-redux";
-import { addSnkr } from "../app/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { addSnkr, fetchSnkr } from "../app/actions";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import UploadWidget from "../components/UploadWidget";
+import Tooltip from "@mui/material/Tooltip";
 
 function EditSnkrPage() {
   const { id } = useParams();
-
   const dispatch = useDispatch();
+  const { snkr } = useSelector((state) => state.snkrs);
   const [name, setname] = useState("");
   const [information, setinformation] = useState("");
   const [price, setprice] = useState("");
@@ -21,28 +23,23 @@ function EditSnkrPage() {
   const navigate = useNavigate();
 
   const handleAddImage = (key, index, value) => {
-    const newData = image.map((data, i) => {
-      return i === key
-        ? data.map((d, i) => {
-            return i === index ? value : d;
-          })
-        : data;
-    });
-    setimage(newData);
+    setimage((prev) =>
+      prev.map((data, i) =>
+        i === key ? data.map((d, j) => (j === index ? value : d)) : data
+      )
+    );
   };
 
   const handleAddInputImage = (index) => {
-    const newData = image.map((data, i) => {
-      return i === index ? [...data, ""] : data;
-    });
-    setimage(newData);
+    setimage((prev) =>
+      prev.map((data, i) => (i === index ? [...data, ""] : data))
+    );
   };
 
   const handleDeleteInputImage = (index) => {
-    const newData = image.map((data, i) => {
-      return i === index ? data.slice(0, -1) : data;
-    });
-    setimage(newData);
+    setimage((prev) =>
+      prev.map((data, i) => (i === index ? data.slice(0, -1) : data))
+    );
   };
 
   const handleAddInputColor = () => {
@@ -52,16 +49,12 @@ function EditSnkrPage() {
   };
 
   const handleDeleteInputColor = () => {
-    if (image[image.length - 1].length == 1) {
-      setselectColor(0);
-      setselectImage(1);
-    }
+    setselectColor(0);
+    setselectImage(1);
     setimage((prev) => {
       return prev.slice(0, -1);
     });
   };
-
-  useEffect(() => {}, []);
 
   const handleData = () => {
     const queryResults = {};
@@ -96,7 +89,7 @@ function EditSnkrPage() {
         return;
       }
 
-      if (queryResult.price.includes(".") || queryResult.price.includes(",")) {
+      if (/\D/.test(queryResult.price)) {
         errorMessage = "Price data all characters must be numbers";
         Swal.fire({
           title: "Status Add",
@@ -146,6 +139,21 @@ function EditSnkrPage() {
       });
     }
   };
+
+  useEffect(() => {
+    dispatch(fetchSnkr(id));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (snkr) {
+      setname(snkr.name);
+      setstatus(snkr.status);
+      setprice(snkr.price);
+      const newImages = Object.entries(snkr.image).map(([k, v], i) => [...v]);
+      setimage(newImages);
+      setinformation(snkr.information);
+    }
+  }, [snkr]);
 
   let Rupiah = new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -252,23 +260,33 @@ function EditSnkrPage() {
                           <div key={index}>
                             <div className="mb-1 block">
                               <Label
-                                htmlFor="nomor0"
+                                htmlFor={`color${i}image${index}`}
                                 className="text-xs dark:text-black md:text-base xl:text-lg"
                                 // color={error.password ? "failure" : "gray"}
                               >
                                 Image {index + 1}
                               </Label>
                             </div>
-                            <TextInput
-                              id="nomor0"
-                              type="text"
-                              // color={error.password ? "failure" : "gray"}
-                              value={data}
-                              onChange={(e) =>
-                                handleAddImage(i, index, e.target.value)
-                              }
-                              required
-                            />
+                            <div className="flex gap-2">
+                              <Tooltip title="Please upload image to fill this field.">
+                                <TextInput
+                                  className="w-full"
+                                  id={`color${i}image${index}`}
+                                  type="text"
+                                  // color={error.password ? "failure" : "gray"}
+                                  defaultValue={data}
+                                  required
+                                  disabled
+                                />
+                              </Tooltip>
+                              <UploadWidget
+                                ky={i}
+                                index={index}
+                                image={image}
+                                setimage={setimage}
+                                handleAddImage={handleAddImage}
+                              />
+                            </div>
                           </div>
                         ))}
                         <div className="flex gap-3">
@@ -276,7 +294,7 @@ function EditSnkrPage() {
                             onClick={() => handleAddInputImage(i)}
                             className="cursor-pointer"
                             type="button"
-                            color="alternative"
+                            color="light"
                           >
                             Add Image
                           </Button>
@@ -285,7 +303,7 @@ function EditSnkrPage() {
                             onClick={() => handleDeleteInputImage(i)}
                             className="cursor-pointer"
                             type="button"
-                            color="alternative"
+                            color="light"
                           >
                             Delete Image
                           </Button>
@@ -295,8 +313,14 @@ function EditSnkrPage() {
                   );
                 })}
                 <div className="flex gap-3">
-                  <Button onClick={handleAddInputColor}>Add Color</Button>
                   <Button
+                    className="cursor-pointer"
+                    onClick={handleAddInputColor}
+                  >
+                    Add Color
+                  </Button>
+                  <Button
+                    className="cursor-pointer"
                     disabled={image.length == 1}
                     onClick={handleDeleteInputColor}
                   >
@@ -382,11 +406,11 @@ function EditSnkrPage() {
             className={`h-[832.500px] flex flex-col flex-nowrap w-25 overflow-y-auto gap-1.5`}
           >
             <div className="h-fit">
-              {image[selectColor].slice(1) == "" ? (
+              {image[selectColor]?.slice(1) == "" ? (
                 <div className="animate-pulse size-14 rounded bg-gray-400"></div>
               ) : (
                 <>
-                  {image[selectColor].slice(1).map((data, i) => (
+                  {image[selectColor]?.slice(1).map((data, i) => (
                     <button
                       type="button"
                       onMouseEnter={() => setselectImage(i + 1)}

@@ -43,7 +43,10 @@ export const fetchSnkr = (id) => async (dispatch) => {
 export const addSnkr = (product) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    await addDoc(collection(db, "sneakers"), product);
+    await addDoc(collection(db, "sneakers"), {
+      ...product,
+      price: Number(product.price),
+    });
     dispatch(fetchSnkrs());
   } catch (error) {
     console.error(error);

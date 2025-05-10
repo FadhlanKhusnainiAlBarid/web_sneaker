@@ -29,17 +29,15 @@ function AddSnkrPage() {
   };
 
   const handleAddInputImage = (index) => {
-    const newData = image.map((data, i) => {
-      return i === index ? [...data, ""] : data;
-    });
-    setimage(newData);
+    setimage((prev) =>
+      prev.map((data, i) => (i === index ? [...data, ""] : data))
+    );
   };
 
   const handleDeleteInputImage = (index) => {
-    const newData = image.map((data, i) => {
-      return i === index ? data.slice(0, -1) : data;
-    });
-    setimage(newData);
+    setimage((prev) =>
+      prev.map((data, i) => (i === index ? data.slice(0, -1) : data))
+    );
   };
 
   const handleAddInputColor = () => {
@@ -49,10 +47,8 @@ function AddSnkrPage() {
   };
 
   const handleDeleteInputColor = () => {
-    if (image[image.length - 1].length == 1) {
-      setselectColor(0);
-      setselectImage(1);
-    }
+    setselectColor(0);
+    setselectImage(1);
     setimage((prev) => {
       return prev.slice(0, -1);
     });
@@ -61,8 +57,7 @@ function AddSnkrPage() {
   const handleData = () => {
     const queryResults = {};
     queryResults.name = name;
-    queryResults.information = information;
-    queryResults.price = price;
+    queryResults.status = status;
     queryResults.price = price;
     image.map((d, i) => {
       queryResults.image?.length === 0
@@ -72,6 +67,7 @@ function AddSnkrPage() {
             [`color_${i + 1}`]: d,
           });
     });
+    queryResults.information = information;
 
     return queryResults;
   };
@@ -126,7 +122,7 @@ function AddSnkrPage() {
         return;
       }
 
-      dispatch(addSnkr(handleData()));
+      dispatch(addSnkr(queryResult));
       Swal.fire({
         title: "Status Add",
         text: "Success Add Sneaker!",
@@ -147,10 +143,6 @@ function AddSnkrPage() {
     currency: "IDR",
     minimumFractionDigits: 0,
   });
-
-  useEffect(() => {
-    console.log(image);
-  }, [image]);
 
   return (
     <div className="container mx-auto flex flex-col lg:flex-row lg:justify-between">

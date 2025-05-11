@@ -153,8 +153,6 @@ function AddSnkrPage() {
             handleAdd();
           }}
           className="space-y-5"
-          oninvalid="Please cnknkcndk."
-          oninput="this.setCustomValidity('')"
         >
           <div>
             <h1 className="text-2xl md:text-3xl xl:text-4xl font-medium">
@@ -261,7 +259,8 @@ function AddSnkrPage() {
                                   // color={error.password ? "failure" : "gray"}
                                   value={data}
                                   required
-                                  aria-disabled
+                                  readOnly
+                                  disabled
                                 />
                               </Tooltip>
                               <UploadWidget
@@ -382,7 +381,7 @@ function AddSnkrPage() {
         </div>
         <div className="h-fit mt-6 flex justify-between gap-3.5">
           <div
-            className={`h-[832.500px] flex flex-col flex-nowrap w-25 overflow-y-auto gap-1.5`}
+            className={`h-fit lg:h-[832.500px] flex flex-col flex-nowrap w-25 overflow-y-auto gap-1.5`}
           >
             <div className="h-fit">
               {image[selectColor].slice(1) == "" ? (

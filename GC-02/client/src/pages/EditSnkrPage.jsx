@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Label, Select, TextInput, HR, Textarea } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
-import { addSnkr, fetchSnkr } from "../app/actions";
+import { addSnkr, editSnkr, fetchSnkr } from "../app/actions";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import UploadWidget from "../components/UploadWidget";
@@ -10,7 +10,7 @@ import Tooltip from "@mui/material/Tooltip";
 function EditSnkrPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { snkr } = useSelector((state) => state.snkrs);
+  const { snkr, loading } = useSelector((state) => state.snkrs);
   const [name, setname] = useState("");
   const [information, setinformation] = useState("");
   const [price, setprice] = useState("");
@@ -19,6 +19,8 @@ function EditSnkrPage() {
 
   const [selectColor, setselectColor] = useState(0);
   const [selectImage, setselectImage] = useState(1);
+
+  const refImageSelected = useRef();
 
   const navigate = useNavigate();
 
@@ -58,9 +60,10 @@ function EditSnkrPage() {
 
   const handleData = () => {
     const queryResults = {};
+    queryResults.id = id;
     queryResults.name = name;
     queryResults.information = information;
-    queryResults.price = price;
+    queryResults.status = status;
     queryResults.price = price;
     image.map((d, i) => {
       queryResults.image?.length === 0
@@ -77,7 +80,7 @@ function EditSnkrPage() {
   const handleAdd = async () => {
     try {
       const queryResult = handleData();
-      let errorMessage;
+      let errorMessage = "";
 
       if (queryResult.name <= 4) {
         errorMessage = "data name should be more than 4 characters";
@@ -107,7 +110,7 @@ function EditSnkrPage() {
           )} data must have at least 2 image`;
           Swal.fire({
             title: "Status Add",
-            text: `${errorMessage}`,
+            text: `${errorMessage} this error`,
             icon: "error",
           });
           return;
@@ -124,7 +127,7 @@ function EditSnkrPage() {
         return;
       }
 
-      dispatch(addSnkr(handleData()));
+      dispatch(editSnkr(handleData()));
       Swal.fire({
         title: "Status Add",
         text: "Success Add Sneaker!",
@@ -276,6 +279,7 @@ function EditSnkrPage() {
                                   // color={error.password ? "failure" : "gray"}
                                   defaultValue={data}
                                   required
+                                  readOnly
                                   disabled
                                 />
                               </Tooltip>
@@ -402,9 +406,7 @@ function EditSnkrPage() {
           ))}
         </div>
         <div className="h-fit mt-6 flex justify-between gap-3.5">
-          <div
-            className={`h-[832.500px] flex flex-col flex-nowrap w-25 overflow-y-auto gap-1.5`}
-          >
+          <div className="h-96 xl:h-[795px] lg:h-[482px] flex flex-col flex-nowrap w-25 gap-1.5">
             <div className="h-fit">
               {image[selectColor]?.slice(1) == "" ? (
                 <div className="animate-pulse size-14 rounded bg-gray-400"></div>
@@ -435,7 +437,11 @@ function EditSnkrPage() {
             {image[selectColor][selectImage] === "" ? (
               <div className="animate-pulse w-full h-96 rounded bg-gray-400"></div>
             ) : (
-              <img src={image[selectColor][selectImage]} alt="" />
+              <img
+                ref={refImageSelected}
+                src={image[selectColor][selectImage]}
+                alt=""
+              />
             )}
           </div>
         </div>

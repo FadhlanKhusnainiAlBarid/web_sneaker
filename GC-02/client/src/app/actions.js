@@ -40,12 +40,12 @@ export const fetchSnkr = (id) => async (dispatch) => {
   }
 };
 
-export const addSnkr = (product) => async (dispatch) => {
+export const addSnkr = (products) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     await addDoc(collection(db, "sneakers"), {
-      ...product,
-      price: Number(product.price),
+      ...products,
+      price: Number(products.price),
     });
     dispatch(fetchSnkrs());
   } catch (error) {
@@ -55,9 +55,19 @@ export const addSnkr = (product) => async (dispatch) => {
   }
 };
 
-export const editSnkr = () => async (dispatch) => {
+export const editSnkr = (products) => async (dispatch) => {
   try {
-  } catch (error) {}
+    dispatch(setLoading(true));
+    await updateDoc(doc(db, "sneakers", products.id), {
+      ...products,
+      price: Number(products.price),
+    });
+    dispatch(fetchSnkrs());
+  } catch (error) {
+    console.error(error);
+  } finally {
+    dispatch(setLoading(true));
+  }
 };
 
 export const deleteSnkr = (arrayId) => async (dispatch) => {

@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteSnkr, fetchSnkrs } from "../app/actions";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import TableRowSnkr from "./TableRowSnkr";
 
 function createData(id, name, imageUrl, information, price) {
   return {
@@ -169,6 +170,12 @@ const headCells = [
     label: "information",
   },
   {
+    id: "status",
+    numeric: false,
+    disablePadding: false,
+    label: "status",
+  },
+  {
     id: "price",
     numeric: true,
     disablePadding: false,
@@ -211,7 +218,7 @@ function EnhancedTableHead(props) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             {/* icons sortable in thead */}
-            {headCell.price ? (
+            {headCell.label === "price" ? (
               <TableSortLabel
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : "asc"}
@@ -362,7 +369,7 @@ let Rupiah = new Intl.NumberFormat("id-ID", {
 
 export default function EnhancedTable() {
   const dispatch = useDispatch();
-  const { snkrs, isLoading } = useSelector((state) => state.snkrs);
+  const { snkrs, loading } = useSelector((state) => state.snkrs);
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -449,11 +456,11 @@ export default function EnhancedTable() {
               // order={order}
               // orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
-              // onRequestSort={handleRequestSort}
+              onRequestSort={handleRequestSort}
               rowCount={snkrs?.length}
             />
             <TableBody>
-              {isLoading ? (
+              {loading ? (
                 <TableRow
                   style={{
                     height: 53 * emptyRows,
@@ -468,45 +475,19 @@ export default function EnhancedTable() {
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
-                      <TableRow
-                        className="odd:bg-gray-50 flex items-start"
-                        hover
-                        onClick={(event) => handleClick(event, row.id)}
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
+                      <TableRowSnkr
                         key={row.id}
-                        selected={isItemSelected}
-                        sx={{ cursor: "pointer" }}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            color="primary"
-                            checked={isItemSelected}
-                            inputProps={{
-                              "aria-labelledby": labelId,
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="none"
-                        >
-                          {row.name}
-                        </TableCell>
-                        <TableCell padding="none" className="w-24">
-                          <img src={row.image?.color_1[0] || null} />
-                        </TableCell>
-                        <TableCell>{row.information}</TableCell>
-                        <TableCell>{Rupiah.format(row.price)}</TableCell>
-                      </TableRow>
+                        handleClick={handleClick}
+                        isItemSelected={isItemSelected}
+                        labelId={labelId}
+                        row={row}
+                        Rupiah={Rupiah}
+                      />
                     );
                   })}
                 </>
               )}
-              {emptyRows > 0 && (
+              {/* {emptyRows > 0 && (
                 <TableRow
                   style={{
                     height: 53 * emptyRows,
@@ -514,7 +495,7 @@ export default function EnhancedTable() {
                 >
                   <TableCell colSpan={6} />
                 </TableRow>
-              )}
+              )} */}
             </TableBody>
           </Table>
         </TableContainer>

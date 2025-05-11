@@ -77,7 +77,7 @@ function EditSnkrPage() {
     return queryResults;
   };
 
-  const handleAdd = async () => {
+  const handleEdit = async () => {
     try {
       const queryResult = handleData();
       let errorMessage = "";
@@ -85,7 +85,7 @@ function EditSnkrPage() {
       if (queryResult.name <= 4) {
         errorMessage = "data name should be more than 4 characters";
         Swal.fire({
-          title: "Status Add",
+          title: "Status Edit",
           text: `${errorMessage}`,
           icon: "error",
         });
@@ -95,7 +95,7 @@ function EditSnkrPage() {
       if (/\D/.test(queryResult.price)) {
         errorMessage = "Price data all characters must be numbers";
         Swal.fire({
-          title: "Status Add",
+          title: "Status Edit",
           text: `${errorMessage}`,
           icon: "error",
         });
@@ -109,7 +109,7 @@ function EditSnkrPage() {
             " "
           )} data must have at least 2 image`;
           Swal.fire({
-            title: "Status Add",
+            title: "Status Edit",
             text: `${errorMessage} this error`,
             icon: "error",
           });
@@ -120,7 +120,7 @@ function EditSnkrPage() {
       if (queryResult.information.length < 10) {
         errorMessage = "data information should be more than 10 characters";
         Swal.fire({
-          title: "Status Add",
+          title: "Status Edit",
           text: `${errorMessage}`,
           icon: "error",
         });
@@ -129,15 +129,15 @@ function EditSnkrPage() {
 
       dispatch(editSnkr(handleData()));
       Swal.fire({
-        title: "Status Add",
-        text: "Success Add Sneaker!",
+        title: "Status Edit",
+        text: "Success Edit Sneaker!",
         icon: "success",
       });
       navigate("/admin");
     } catch (error) {
       Swal.fire({
-        title: "Status Add",
-        text: `;`,
+        title: "Status Edit",
+        text: `${error.message}`,
         icon: "error",
       });
     }
@@ -170,7 +170,7 @@ function EditSnkrPage() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            handleAdd();
+            handleEdit();
           }}
           className="space-y-5"
         >

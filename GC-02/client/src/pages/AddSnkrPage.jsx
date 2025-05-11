@@ -132,7 +132,7 @@ function AddSnkrPage() {
     } catch (error) {
       Swal.fire({
         title: "Status Add",
-        text: `;`,
+        text: `${error.message}`,
         icon: "error",
       });
     }

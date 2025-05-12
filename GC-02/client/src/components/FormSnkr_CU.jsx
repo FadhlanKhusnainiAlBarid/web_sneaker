@@ -13,7 +13,6 @@ function FormSnkr_CU({
   price,
   setprice,
   image,
-  setimage,
   information,
   setinformation,
   handleAddImage,
@@ -134,8 +133,6 @@ function FormSnkr_CU({
                           <UploadWidget
                             ky={i}
                             index={index}
-                            image={image}
-                            setimage={setimage}
                             handleAddImage={handleAddImage}
                           />
                         </div>

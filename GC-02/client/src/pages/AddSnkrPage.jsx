@@ -1,166 +1,36 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addSnkr } from "../app/actions";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import React from "react";
 import FormSnkr_CU from "../components/FormSnkr_CU";
 import ShowResult_CU from "../components/ShowResult_CU";
+import useFormCU from "../hook/useFormCU";
+import { useSelector } from "react-redux";
 
 function AddSnkrPage() {
-  const dispatch = useDispatch();
-  const [name, setname] = useState("");
-  const [information, setinformation] = useState("");
-  const [price, setprice] = useState("");
-  const [status, setstatus] = useState("Men's Shoes");
-  const [image, setimage] = useState([["", ""]]);
+  const { loading } = useSelector((state) => state.snkrs);
+  const {
+    name,
+    setname,
+    status,
+    setstatus,
+    price,
+    setprice,
+    image,
+    setimage,
+    information,
+    setinformation,
+    selectColor,
+    setselectColor,
+    selectImage,
+    setselectImage,
+    handleAddImage,
+    handleAddInputImage,
+    handleDeleteInputImage,
+    handleAddInputColor,
+    handleDeleteInputColor,
+    handleAdd,
+  } = useFormCU();
 
-  const [selectColor, setselectColor] = useState(0);
-  const [selectImage, setselectImage] = useState(1);
-
-  const navigate = useNavigate();
-
-  const handleAddImage = (key, index, value) => {
-    setimage((prev) =>
-      prev.map((data, i) =>
-        i === key ? data.map((d, j) => (j === index ? value : d)) : data
-      )
-    );
-  };
-
-  const handleAddInputImage = (index) => {
-    setimage((prev) =>
-      prev.map((data, i) => (i === index ? [...data, ""] : data))
-    );
-  };
-
-  const handleDeleteInputImage = (index) => {
-    setimage((prev) =>
-      prev.map((data, i) => (i === index ? data.slice(0, -1) : data))
-    );
-  };
-
-  const handleAddInputColor = () => {
-    setimage((prev) => {
-      return [...prev, [""]];
-    });
-  };
-
-  const handleDeleteInputColor = () => {
-    setselectColor(0);
-    setselectImage(1);
-    setimage((prev) => {
-      return prev.slice(0, -1);
-    });
-  };
-
-  const handleData = () => {
-    const queryResults = {};
-    queryResults.name = name;
-    queryResults.status = status;
-    queryResults.price = price;
-    image.map((d, i) => {
-      queryResults.image?.length === 0
-        ? (queryResults.image = { [`color_${i + 1}`]: d })
-        : (queryResults.image = {
-            ...queryResults.image,
-            [`color_${i + 1}`]: d,
-          });
-    });
-    queryResults.information = information;
-
-    return queryResults;
-  };
-
-  const handleAdd = async () => {
-    try {
-      const queryResult = handleData();
-      let errorMessage;
-
-      if (queryResult.name <= 4) {
-        errorMessage = "data name should be more than 4 characters";
-        Swal.fire({
-          title: "Status Add",
-          text: `${errorMessage}`,
-          icon: "error",
-        });
-        return;
-      }
-
-      if (/\D/.test(queryResult.price)) {
-        errorMessage = "Price data all characters must be numbers";
-        Swal.fire({
-          title: "Status Add",
-          text: `${errorMessage}`,
-          icon: "error",
-        });
-        return;
-      }
-
-      if (queryResult.price.length >= 2) {
-        if (queryResult.price.slice(0, 1).includes(0)) {
-          errorMessage = "Price data frist character must be number 0";
-          Swal.fire({
-            title: "Status Edit",
-            text: `${errorMessage}`,
-            icon: "error",
-          });
-          return;
-        }
-      }
-
-      for (const [key, value] of Object.entries(queryResult.image)) {
-        if (value.length == 1) {
-          errorMessage = `Images ${key.replace(
-            "_",
-            " "
-          )} data must have at least 2 image`;
-          Swal.fire({
-            title: "Status Add",
-            text: `${errorMessage}`,
-            icon: "error",
-          });
-          return;
-        }
-
-        for (const [i, v] of value.entries()) {
-          if (v.length === 0) {
-            errorMessage = `${key.replace("_", " ")} Image ${
-              i + 1
-            } data required to fill`;
-            Swal.fire({
-              title: "Status Add",
-              text: `${errorMessage}`,
-              icon: "error",
-            });
-            return;
-          }
-        }
-      }
-
-      if (queryResult.information.length < 10) {
-        errorMessage = "data information should be more than 10 characters";
-        Swal.fire({
-          title: "Status Add",
-          text: `${errorMessage}`,
-          icon: "error",
-        });
-        return;
-      }
-
-      dispatch(addSnkr(queryResult));
-      Swal.fire({
-        title: "Status Add",
-        text: "Success Add Sneaker!",
-        icon: "success",
-      });
-      navigate("/admin");
-    } catch (error) {
-      Swal.fire({
-        title: "Status Add",
-        text: `${error.message}`,
-        icon: "error",
-      });
-    }
+  const handleAddAction = () => {
+    handleAdd();
   };
 
   let Rupiah = new Intl.NumberFormat("id-ID", {
@@ -173,7 +43,8 @@ function AddSnkrPage() {
     <div className="container mx-auto flex flex-col lg:flex-row lg:justify-between">
       <div className="size-full p-4">
         <FormSnkr_CU
-          action={handleAdd}
+          action={handleAddAction}
+          loading={loading}
           name={name}
           setname={setname}
           status={status}

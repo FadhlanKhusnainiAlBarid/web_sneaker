@@ -406,7 +406,7 @@ function EditSnkrPage() {
           ))}
         </div>
         <div className="h-fit mt-6 flex justify-between gap-3.5">
-          <div className="h-96 xl:h-[795px] lg:h-[482px] flex flex-col flex-nowrap w-25 gap-1.5">
+          <div className="h-full flex flex-col size-14 gap-1.5">
             <div className="h-fit">
               {image[selectColor]?.slice(1) == "" ? (
                 <div className="animate-pulse size-14 rounded bg-gray-400"></div>
@@ -418,7 +418,7 @@ function EditSnkrPage() {
                       onMouseEnter={() => setselectImage(i + 1)}
                       key={i}
                       className={`relative size-14 ${
-                        data == ""
+                        data === ""
                           ? "animate-pulse rounded bg-gray-400"
                           : "cursor-pointer overflow-hidden rounded"
                       }`}

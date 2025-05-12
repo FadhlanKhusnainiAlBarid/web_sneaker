@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Button, Label, Select, TextInput, HR, Textarea } from "flowbite-react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addSnkr, editSnkr, fetchSnkr } from "../app/actions";
+import { editSnkr, fetchSnkr } from "../app/actions";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import UploadWidget from "../components/UploadWidget";
-import Tooltip from "@mui/material/Tooltip";
+import FormSnkr_CU from "../components/FormSnkr_CU";
+import ShowResult_CU from "../components/ShowResult_CU";
 
 function EditSnkrPage() {
   const { id } = useParams();
@@ -19,8 +18,6 @@ function EditSnkrPage() {
 
   const [selectColor, setselectColor] = useState(0);
   const [selectImage, setselectImage] = useState(1);
-
-  const refImageSelected = useRef();
 
   const navigate = useNavigate();
 
@@ -102,6 +99,18 @@ function EditSnkrPage() {
         return;
       }
 
+      if (queryResult.price.length >= 2) {
+        if (queryResult.price.slice(0, 1).includes(0)) {
+          errorMessage = "Price data frist character must be number 0";
+          Swal.fire({
+            title: "Status Edit",
+            text: `${errorMessage}`,
+            icon: "error",
+          });
+          return;
+        }
+      }
+
       for (const [key, value] of Object.entries(queryResult.image)) {
         if (value.length == 1) {
           errorMessage = `Images ${key.replace(
@@ -115,6 +124,20 @@ function EditSnkrPage() {
           });
           return;
         }
+
+        for (const [i, v] of value.entries()) {
+          if (v.length === 0) {
+            errorMessage = `${key.replace("_", " ")} Image ${
+              i + 1
+            } data required to fill`;
+            Swal.fire({
+              title: "Status Add",
+              text: `${errorMessage}`,
+              icon: "error",
+            });
+            return;
+          }
+        }
       }
 
       if (queryResult.information.length < 10) {
@@ -127,7 +150,7 @@ function EditSnkrPage() {
         return;
       }
 
-      dispatch(editSnkr(handleData()));
+      dispatch(editSnkr(queryResult));
       Swal.fire({
         title: "Status Edit",
         text: "Success Edit Sneaker!",
@@ -152,7 +175,7 @@ function EditSnkrPage() {
       setname(snkr.name);
       setstatus(snkr.status);
       setprice(snkr.price);
-      const newImages = Object.entries(snkr.image).map(([k, v], i) => [...v]);
+      const newImages = Object.entries(snkr.image).map(([_, v]) => [...v]);
       setimage(newImages);
       setinformation(snkr.information);
     }
@@ -167,293 +190,40 @@ function EditSnkrPage() {
   return (
     <div className="container mx-auto flex flex-col lg:flex-row lg:justify-between">
       <div className="size-full p-4">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleEdit();
-          }}
-          className="space-y-5"
-        >
-          <div>
-            <h1 className="text-2xl md:text-3xl xl:text-4xl font-medium">
-              Add New SNKR
-            </h1>
-          </div>
-          <div className="space-y-3">
-            {/* input name */}
-            <div>
-              <div className="mb-1 block">
-                <Label
-                  htmlFor="name"
-                  className="text-xs dark:text-black md:text-base xl:text-lg"
-                  // color={error.name ? "failure" : "gray"}
-                >
-                  Name
-                </Label>
-              </div>
-              <TextInput
-                id="name"
-                type="text"
-                placeholder="Name"
-                // color={error.name ? "failure" : "gray"}
-                value={name}
-                onChange={(e) => setname(e.target.value)}
-                required
-              />
-            </div>
-
-            {/* input gender */}
-            <div>
-              <div className="mb-1 block">
-                <Label
-                  htmlFor="status"
-                  className="text-xs dark:text-black md:text-base xl:text-lg"
-                  // color={error.status ? "failure" : "gray"}
-                >
-                  Status
-                </Label>
-              </div>
-              <Select
-                value={status}
-                onChange={(e) => setstatus(e.target.value)}
-                id="status"
-                required
-              >
-                <option value="Men's Shoes">Men's Shoes</option>
-                <option value="Women's Shoes">Women's Shoes</option>
-              </Select>
-            </div>
-
-            {/* input price */}
-            <div>
-              <div className="mb-1 block">
-                <Label
-                  htmlFor="price"
-                  className="text-xs dark:text-black md:text-base xl:text-lg"
-                  // color={error.password ? "failure" : "gray"}
-                >
-                  Price
-                </Label>
-              </div>
-              <TextInput
-                id="price"
-                type="number"
-                // color={error.password ? "failure" : "gray"}
-                value={price}
-                onChange={(e) => setprice(e.target.value)}
-                required
-              />
-            </div>
-
-            {/* input image */}
-            <div>
-              <h1 className="text-sm font-medium text-black md:text-base xl:text-lg">
-                Image
-              </h1>
-
-              <div className="ml-5 space-y-5">
-                {image.map((value, i) => {
-                  return (
-                    <div key={i}>
-                      <h1 className="text-sm font-medium text-black md:text-base xl:text-lg">
-                        Colour {i + 1}
-                      </h1>
-                      <div className="ml-5 space-y-3">
-                        {value.map((data, index) => (
-                          <div key={index}>
-                            <div className="mb-1 block">
-                              <Label
-                                htmlFor={`color${i}image${index}`}
-                                className="text-xs dark:text-black md:text-base xl:text-lg"
-                                // color={error.password ? "failure" : "gray"}
-                              >
-                                Image {index + 1}
-                              </Label>
-                            </div>
-                            <div className="flex gap-2">
-                              <Tooltip title="Please upload image to fill this field.">
-                                <TextInput
-                                  className="w-full"
-                                  id={`color${i}image${index}`}
-                                  type="text"
-                                  // color={error.password ? "failure" : "gray"}
-                                  defaultValue={data}
-                                  required
-                                  readOnly
-                                  disabled
-                                />
-                              </Tooltip>
-                              <UploadWidget
-                                ky={i}
-                                index={index}
-                                image={image}
-                                setimage={setimage}
-                                handleAddImage={handleAddImage}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                        <div className="flex gap-3">
-                          <Button
-                            onClick={() => handleAddInputImage(i)}
-                            className="cursor-pointer"
-                            type="button"
-                            color="light"
-                          >
-                            Add Image
-                          </Button>
-                          <Button
-                            disabled={value.length == 1}
-                            onClick={() => handleDeleteInputImage(i)}
-                            className="cursor-pointer"
-                            type="button"
-                            color="light"
-                          >
-                            Delete Image
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-                <div className="flex gap-3">
-                  <Button
-                    className="cursor-pointer"
-                    onClick={handleAddInputColor}
-                  >
-                    Add Color
-                  </Button>
-                  <Button
-                    className="cursor-pointer"
-                    disabled={image.length == 1}
-                    onClick={handleDeleteInputColor}
-                  >
-                    Delete Color
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* input information */}
-            <div>
-              <div className="mb-1 block">
-                <Label
-                  htmlFor="information"
-                  className="text-xs dark:text-black md:text-base xl:text-lg"
-                  // color={error.password ? "failure" : "gray"}
-                >
-                  Information
-                </Label>
-              </div>
-              <Textarea
-                id="comment"
-                placeholder="Leave a comment..."
-                // color={error.password ? "failure" : "gray"}
-                value={information}
-                onChange={(e) => setinformation(e.target.value)}
-                required
-                rows={4}
-              />
-            </div>
-          </div>
-          <HR className="my-5" />
-          <Button type="submit" className="cursor-pointer w-full h-12 text-lg">
-            Add
-          </Button>
-        </form>
+        <FormSnkr_CU
+          action={handleEdit}
+          loading={loading}
+          name={name}
+          setname={setname}
+          status={status}
+          setstatus={setstatus}
+          price={price}
+          setprice={setprice}
+          image={image}
+          setimage={setimage}
+          information={information}
+          setinformation={setinformation}
+          handleAddImage={handleAddImage}
+          handleAddInputColor={handleAddInputColor}
+          handleDeleteInputColor={handleDeleteInputColor}
+          handleAddInputImage={handleAddInputImage}
+          handleDeleteInputImage={handleDeleteInputImage}
+          setselectColor={setselectColor}
+          setselectImage={setselectImage}
+        />
       </div>
       <div className="size-full p-4">
-        <h1
-          className={`${
-            name.length > 0
-              ? "text-wrap line-clamp-2 text-base lg:text-lg font-semibold leading-6 text-gray-900 dark:text-dark"
-              : "animate-pulse w-36 h-5 rounded bg-gray-400"
-          }`}
-        >
-          {name}
-        </h1>
-        <p
-          className={`mt-px ${
-            status.length > 0
-              ? "text-base font-medium leading-5 text-gray-700 dark:text-gray-500"
-              : "animate-pulse w-24 h-4 rounded bg-gray-400"
-          }`}
-        >
-          {status}
-        </p>
-        <p className="mt-3 text-lg font-semibold mb-6">
-          {Rupiah.format(price)}
-        </p>
-        <div className="flex gap-1">
-          {image.map((data, i) => (
-            <button
-              type="button"
-              onClick={() => {
-                setselectColor(i);
-                setselectImage(1);
-              }}
-              key={i}
-              className={`${
-                data[0] == ""
-                  ? `animate-pulse size-16 bg-gray-400`
-                  : `cursor-pointer overflow-hidden size-16 rounded ${
-                      selectColor === i ? "border" : "hover:border border-black"
-                    }`
-              }`}
-            >
-              <img src={data[0] || null} alt="" />
-            </button>
-          ))}
-        </div>
-        <div className="h-fit mt-6 flex justify-between gap-3.5">
-          <div className="h-full flex flex-col size-14 gap-1.5">
-            <div className="h-fit">
-              {image[selectColor]?.slice(1) == "" ? (
-                <div className="animate-pulse size-14 rounded bg-gray-400"></div>
-              ) : (
-                <>
-                  {image[selectColor]?.slice(1).map((data, i) => (
-                    <button
-                      type="button"
-                      onMouseEnter={() => setselectImage(i + 1)}
-                      key={i}
-                      className={`relative size-14 ${
-                        data === ""
-                          ? "animate-pulse rounded bg-gray-400"
-                          : "cursor-pointer overflow-hidden rounded"
-                      }`}
-                    >
-                      {selectImage === i + 1 && (
-                        <div className="absolute size-full bg-black/40" />
-                      )}
-                      <img className="size-14" src={data} alt="" />
-                    </button>
-                  ))}
-                </>
-              )}
-            </div>
-          </div>
-          <div className="w-full">
-            {image[selectColor][selectImage] === "" ? (
-              <div className="animate-pulse w-full h-96 rounded bg-gray-400"></div>
-            ) : (
-              <img
-                ref={refImageSelected}
-                src={image[selectColor][selectImage]}
-                alt=""
-              />
-            )}
-          </div>
-        </div>
-        <div className="mt-3">
-          {information == "" ? (
-            <div className="animate-pulse w-full h-60 rounded bg-gray-400"></div>
-          ) : (
-            <p className="text-xl font-medium text-black dark:text-black">
-              {information}
-            </p>
-          )}
-        </div>
+        <ShowResult_CU
+          name={name}
+          status={status}
+          price={price}
+          Rupiah={Rupiah}
+          image={image}
+          selectColor={selectColor}
+          setselectColor={setselectColor}
+          selectImage={selectImage}
+          setselectImage={setselectImage}
+        />
       </div>
     </div>
   );

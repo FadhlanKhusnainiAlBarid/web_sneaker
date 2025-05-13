@@ -6,8 +6,9 @@ import {
   signOut,
   signInWithPopup,
 } from "firebase/auth";
-import { auth, provider } from "../config/firebase";
+import { auth, db, provider } from "../config/firebase";
 import Swal from "sweetalert2";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 function useAuthFirebase() {
   const [error, seterror] = useState({
@@ -53,10 +54,10 @@ function useAuthFirebase() {
       });
     }
   };
-  const Register = async (email, password, confPassword) => {
-    seterror({ email: false, password: false, confPassword: false });
+  const Register = async (name, email, password, confPassword) => {
     try {
       if (password !== confPassword) {
+        console.log(password, confPassword);
         seterror((prev) => {
           return { ...prev, confPassword: true };
         });
@@ -67,7 +68,18 @@ function useAuthFirebase() {
         });
         return;
       }
-      await createUserWithEmailAndPassword(auth, email, password);
+      const response = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // add data user to collection users
+      await setDoc(doc(db, "users", response.user.uid), {
+        name: name,
+        email: email,
+        role: "customer",
+      });
       Swal.fire({
         title: "Success",
         text: "Success Login account!",
@@ -114,7 +126,17 @@ function useAuthFirebase() {
 
   const handleLoginGoogle = async () => {
     try {
-      await signInWithPopup(auth, provider);
+      const response = await signInWithPopup(auth, provider);
+
+      const checkUser = await getDoc(doc(db, "users", response.user.uid));
+
+      if (!checkUser.data()) {
+        await setDoc(doc(db, "users", response.user.uid), {
+          name: response.user.displayName,
+          email: response.user.email,
+          role: "customer",
+        });
+      }
       Swal.fire({
         title: "Success Login",
         text: "Success Login account!",

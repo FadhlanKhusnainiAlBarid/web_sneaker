@@ -9,6 +9,7 @@ function Register() {
   const { user, loading } = useContext(AuthContext);
 
   const { error, seterror, Register } = useAuthFirebase();
+  const [name, setname] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [confPassword, setconfPassword] = useState("");
@@ -40,7 +41,7 @@ function Register() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            Register(email, password, confPassword);
+            Register(name, email, password, confPassword);
           }}
           className="md:w-1/2 lg:w-2/3 space-y-5"
         >
@@ -53,6 +54,27 @@ function Register() {
             </p>
           </div>
           <div className="space-y-3">
+            {" "}
+            <div>
+              <div className="mb-1 block">
+                <Label
+                  htmlFor="name"
+                  className="text-xs md:text-base xl:text-lg"
+                  color={error.name ? "failure" : "gray"}
+                >
+                  Your Name
+                </Label>
+              </div>
+              <TextInput
+                id="name"
+                type="text"
+                placeholder="mail@abc.com"
+                color={error.name ? "failure" : "gray"}
+                value={name}
+                onChange={(e) => setname(e.target.value)}
+                required
+              />
+            </div>
             <div>
               <div className="mb-1 block">
                 <Label

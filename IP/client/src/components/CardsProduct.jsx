@@ -54,7 +54,9 @@ function CardsProduct({ data }) {
             {data.status}
           </p>
           <p className="line-clamp-2 text-base leading-5 text-gray-700 dark:text-gray-500">
-            {Object.keys(data.image).length} Colours
+            {`${Object.keys(data.image).length} ${
+              Object.keys(data.image).length > 1 ? "Colours" : "Colour"
+            }`}
           </p>
         </div>
       </div>

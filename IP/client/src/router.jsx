@@ -14,6 +14,7 @@ import AddSnkrPage from "./pages/AddSnkrPage";
 import EditSnkrPage from "./pages/EditSnkrPage";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
+import DetailPage from "./pages/DetailPage";
 
 function ProtectAdminPage() {
   const { user, role } = useContext(AuthContext);
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: "register",
         element: <Register />,
+      },
+      {
+        path: "detail/:id",
+        element: <DetailPage />,
       },
       {
         element: <ProtectAdminPage />,

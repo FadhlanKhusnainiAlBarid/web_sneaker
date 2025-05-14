@@ -1,13 +1,32 @@
-import { createBrowserRouter } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  useLocation,
+} from "react-router-dom";
 import MainLayout from "./layout/MainLayout";
 import Home from "./pages/HomePage";
 import Login from "./pages/LoginPage";
 import Register from "./pages/RegisterPage";
-import AdminLayout from "./layout/AdminLayout";
 import Admin from "./pages/AdminPage";
 import ErrorPage from "./pages/ErrorPage";
 import AddSnkrPage from "./pages/AddSnkrPage";
 import EditSnkrPage from "./pages/EditSnkrPage";
+import { useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
+
+function ProtectAdminPage() {
+  const { user, role } = useContext(AuthContext);
+  const location = useLocation();
+
+  if (user && role === "customer") {
+    return <Navigate to="/" replace />;
+  } else if (user && role === "admin") {
+    return <Outlet />;
+  } else {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+}
 
 const router = createBrowserRouter([
   {
@@ -27,16 +46,21 @@ const router = createBrowserRouter([
         element: <Register />,
       },
       {
-        path: "/admin",
-        element: <Admin />,
-      },
-      {
-        path: "/add_sneaker",
-        element: <AddSnkrPage />,
-      },
-      {
-        path: "/edit_sneaker/:id",
-        element: <EditSnkrPage />,
+        element: <ProtectAdminPage />,
+        children: [
+          {
+            path: "/admin",
+            element: <Admin />,
+          },
+          {
+            path: "/add_sneaker",
+            element: <AddSnkrPage />,
+          },
+          {
+            path: "/edit_sneaker/:id",
+            element: <EditSnkrPage />,
+          },
+        ],
       },
     ],
     errorElement: <ErrorPage />,

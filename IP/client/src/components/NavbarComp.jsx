@@ -15,7 +15,7 @@ import { NavbarTheme } from "../assets/CustomTheme";
 
 function NavbarComp() {
   const { Logout } = useAuthFirebase();
-  const { user } = useContext(AuthContext);
+  const { user, role } = useContext(AuthContext);
   return (
     <div className="border-b-2 border-gray-100">
       <Navbar
@@ -29,12 +29,24 @@ function NavbarComp() {
         </NavbarBrand>
         {/* </div> */}
         <NavbarToggle />
-        <NavbarCollapse className="*:flex *:items-center">
+        <NavbarCollapse className="*:flex *:items-center *:capitalize">
           {user ? (
             <>
-              <NavbarLink as={Link} to="/admin">
-                admin
-              </NavbarLink>
+              {role === "admin" ? (
+                <NavbarLink as={Link} to="/admin">
+                  admin
+                </NavbarLink>
+              ) : (
+                <>
+                  <NavbarLink as={Link} to="/admin">
+                    cart
+                  </NavbarLink>
+                  <NavbarLink as={Link} to="/admin">
+                    favorite
+                  </NavbarLink>
+                </>
+              )}
+
               <Button className="cursor-pointer" onClick={Logout} color="red">
                 Logout
               </Button>

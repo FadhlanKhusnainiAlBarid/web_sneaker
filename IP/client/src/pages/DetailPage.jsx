@@ -7,6 +7,16 @@ import { mergeSlotProps } from "@mui/material";
 import { Button } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSnkr } from "../app/actions";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
+
+import "../index.css";
+
+// import required modules
+import { Pagination } from "swiper/modules";
 
 let Rupiah = new Intl.NumberFormat("id-ID", {
   style: "currency",
@@ -33,8 +43,8 @@ function DetailPage() {
   // }, [snkr]);
   return (
     <div className="container mx-auto">
-      <div className="grid grid-cols-12 gap-x-4 pt-4">
-        <div className="2xl:col-start-2 lg:col-start-0 col-span-7 lg:col-span-6">
+      <div className="lg:grid lg:grid-cols-12 lg:gap-x-4 pt-4">
+        <div className="lg:block hidden 2xl:col-start-2 lg:col-start-0 col-span-7 lg:col-span-6">
           <div className="2xl:w-4/5 xl:w-5/6 lg:w-6/7 ml-auto flex justify-between gap-x-3.5 sticky top-0">
             <div className="2xl:h-[658.271px] xl:h-[553.656px] lg:h-[439.031px] w-23 lg:w-24 no-scrollbar overflow-y-auto">
               {snkr &&
@@ -99,36 +109,60 @@ function DetailPage() {
           </div>
         </div>
         <div className="xl:col-span-4 lg:col-span-5 col-end-12">
-          <h1 className="text-wrap line-clamp-2 text-base lg:text-lg font-semibold leading-6 text-gray-900 dark:text-dark">
+          <h1 className="ml-4 lg:ml-0 text-wrap line-clamp-2 text-xl lg:text-lg font-semibold leading-6 text-gray-900 dark:text-dark">
             {snkr && snkr.name}
           </h1>
-          <p className="text-base font-medium leading-5 text-gray-700 dark:text-gray-500">
+          <p className="ml-4 lg:ml-0 text-base font-medium leading-5 text-gray-700 dark:text-gray-500">
             {snkr && snkr.status}
           </p>
-          <p className="mt-3 text-lg font-semibold mb-6">
+          <p className="ml-4 lg:ml-0 mt-3 text-lg font-semibold mb-3 lg:mb-6">
             {snkr && Rupiah.format(snkr.price)}
           </p>
-          <div className="flex gap-1">
-            {snkr &&
-              Object.keys(snkr.image).map((k, i) => (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setselectColor(i + 1);
-                    setselectImage(1);
-                  }}
-                  key={i}
-                  className={`cursor-pointer overflow-hidden size-16 rounded ${
-                    selectColor == i + 1
-                      ? "border"
-                      : "hover:border border-black"
-                  } border-black`}
-                >
-                  <img src={snkr.image[k][0]} alt="" />
-                </button>
-              ))}
+          <div className="lg:hidden block mb-3">
+            <Swiper
+              pagination={true}
+              modules={[Pagination]}
+              className="mySwiper"
+            >
+              {snkr &&
+                Object.entries(snkr.image).map(([_, value], index) => (
+                  <>
+                    {index === selectColor - 1 && (
+                      <>
+                        {value.slice(1).map((v) => (
+                          <SwiperSlide>
+                            <img src={v} alt={snkr.name} />
+                          </SwiperSlide>
+                        ))}
+                      </>
+                    )}
+                  </>
+                ))}
+            </Swiper>
           </div>
-          <div className="mt-6 space-y-2">
+          <div className="w-full overflow-x-scroll lg:overflow-hidden">
+            <div className="w-fit flex flex-nowrap gap-2.5">
+              {snkr &&
+                Object.keys(snkr.image).map((k, i) => (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setselectColor(i + 1);
+                      setselectImage(1);
+                    }}
+                    key={i}
+                    className={`cursor-pointer overflow-hidden size-28 lg:size-16 rounded ${
+                      selectColor == i + 1
+                        ? "border"
+                        : "hover:border border-black"
+                    } border-black`}
+                  >
+                    <img src={snkr.image[k][0]} alt="" />
+                  </button>
+                ))}
+            </div>
+          </div>
+          <div className="mt-6 space-y-2 lg:px-0 px-4">
             <Button
               className="cursor-pointer w-full bg-black dark:bg-black dark:hover:bg-black/90 rounded-full"
               color="dark"
@@ -142,8 +176,8 @@ function DetailPage() {
               Favourite <FavoriteBorderIcon />
             </Button>
           </div>
-          <p className="mt-9 text-xl font-medium text-black dark:text-black">
-            {snkr.information}
+          <p className="mt-6 lg:mt-9 lg:px-0 px-4 text-sm lg:text-xl font-medium text-black dark:text-black">
+            {snkr && snkr.information}
           </p>
         </div>
       </div>

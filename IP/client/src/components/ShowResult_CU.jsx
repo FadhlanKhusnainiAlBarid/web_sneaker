@@ -2,7 +2,7 @@ import React from "react";
 
 function ShowResult_CU({
   name,
-  status,
+  gender,
   price,
   Rupiah,
   image,
@@ -25,12 +25,12 @@ function ShowResult_CU({
       </h1>
       <p
         className={`mt-px ${
-          status.length > 0
+          gender.length > 0
             ? "text-base font-medium leading-5 text-gray-700 dark:text-gray-500"
             : "animate-pulse w-24 h-4 rounded bg-gray-400"
         }`}
       >
-        {status}
+        {gender}
       </p>
       <p className="mt-3 text-lg font-semibold mb-6">{Rupiah.format(price)}</p>
       <div className="flex gap-1">

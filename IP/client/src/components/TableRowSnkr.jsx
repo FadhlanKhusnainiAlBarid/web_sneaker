@@ -29,7 +29,7 @@ function TableRowSnkr({ handleClick, isItemSelected, labelId, row, Rupiah }) {
         <img src={row.image?.color_1[0] || null} />
       </TableCell>
       <TableCell>{row.information}</TableCell>
-      <TableCell>{row.status}</TableCell>
+      <TableCell>{row.gender}</TableCell>
       <TableCell>{Rupiah.format(row.price)}</TableCell>
     </TableRow>
   );

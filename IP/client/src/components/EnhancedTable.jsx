@@ -170,10 +170,10 @@ const headCells = [
     label: "information",
   },
   {
-    id: "status",
+    id: "gender",
     numeric: false,
     disablePadding: false,
-    label: "status",
+    label: "gender",
   },
   {
     id: "price",
@@ -234,24 +234,8 @@ function EnhancedTableHead(props) {
                 ) : null}
               </TableSortLabel>
             ) : (
-              <>
-                {headCell.label}
-                {orderBy === headCell.id ? (
-                  <Box component="span" sx={visuallyHidden}>
-                    {order === "desc"
-                      ? "sorted descending"
-                      : "sorted ascending"}
-                  </Box>
-                ) : null}
-              </>
+              <>{headCell.label}</>
             )}
-
-            {/* {headCell.label}
-            {orderBy === headCell.id ? (
-              <Box component="span" sx={visuallyHidden}>
-                {order === "desc" ? "sorted descending" : "sorted ascending"}
-              </Box>
-            ) : null} */}
           </TableCell>
         ))}
       </TableRow>
@@ -487,15 +471,6 @@ export default function EnhancedTable() {
                   })}
                 </>
               )}
-              {/* {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 53 * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )} */}
             </TableBody>
           </Table>
         </TableContainer>

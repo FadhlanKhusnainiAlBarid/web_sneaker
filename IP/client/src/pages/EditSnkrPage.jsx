@@ -13,14 +13,16 @@ function EditSnkrPage() {
   const {
     name,
     setname,
-    status,
-    setstatus,
+    gender,
+    setgender,
     price,
     setprice,
     image,
     setimage,
     information,
     setinformation,
+    quantity,
+    setquantity,
     selectColor,
     setselectColor,
     selectImage,
@@ -44,11 +46,12 @@ function EditSnkrPage() {
   useEffect(() => {
     if (snkr) {
       setname(snkr.name);
-      setstatus(snkr.status);
+      setgender(snkr.gender);
       setprice(snkr.price);
       const newImages = Object.entries(snkr.image).map(([_, v]) => [...v]);
       setimage(newImages);
       setinformation(snkr.information);
+      setquantity(snkr.quantity);
     }
   }, [snkr]);
 
@@ -66,8 +69,8 @@ function EditSnkrPage() {
           loading={loading}
           name={name}
           setname={setname}
-          status={status}
-          setstatus={setstatus}
+          gender={gender}
+          setgender={setgender}
           price={price}
           setprice={setprice}
           image={image}
@@ -87,7 +90,7 @@ function EditSnkrPage() {
       <div className="size-full p-4">
         <ShowResult_CU
           name={name}
-          status={status}
+          gender={gender}
           price={price}
           Rupiah={Rupiah}
           image={image}

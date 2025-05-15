@@ -9,8 +9,8 @@ function AddSnkrPage() {
   const {
     name,
     setname,
-    status,
-    setstatus,
+    gender,
+    setgender,
     price,
     setprice,
     image,
@@ -49,8 +49,8 @@ function AddSnkrPage() {
           loading={loading}
           name={name}
           setname={setname}
-          status={status}
-          setstatus={setstatus}
+          gender={gender}
+          setgender={setgender}
           price={price}
           setprice={setprice}
           image={image}
@@ -71,7 +71,7 @@ function AddSnkrPage() {
       <div className="size-full p-4">
         <ShowResult_CU
           name={name}
-          status={status}
+          gender={gender}
           price={price}
           Rupiah={Rupiah}
           image={image}

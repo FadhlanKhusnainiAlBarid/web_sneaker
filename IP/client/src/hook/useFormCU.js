@@ -9,7 +9,7 @@ function useFormCU() {
   const [name, setname] = useState("");
   const [information, setinformation] = useState("");
   const [price, setprice] = useState("");
-  const [status, setstatus] = useState("Men's Shoes");
+  const [gender, setgender] = useState("Men's Shoes");
   const [image, setimage] = useState([["", ""]]);
   const [quantity, setquantity] = useState(0);
 
@@ -56,7 +56,7 @@ function useFormCU() {
     const queryResults = {};
     queryResults.name = name;
     queryResults.information = information;
-    queryResults.status = status;
+    queryResults.gender = gender;
     queryResults.price = price;
     image.map((d, i) => {
       queryResults.image?.length === 0
@@ -302,7 +302,7 @@ function useFormCU() {
 
   useEffect(() => {
     setname("");
-    setstatus("Men's Shoes");
+    setgender("Men's Shoes");
     setprice("");
     setimage([["", ""]]);
     setinformation("");
@@ -314,8 +314,8 @@ function useFormCU() {
   return {
     name,
     setname,
-    status,
-    setstatus,
+    gender,
+    setgender,
     price,
     setprice,
     image,

@@ -8,8 +8,8 @@ function FormSnkr_CU({
   loading,
   name,
   setname,
-  status,
-  setstatus,
+  gender,
+  setgender,
   price,
   setprice,
   image,
@@ -61,16 +61,16 @@ function FormSnkr_CU({
         <div>
           <div className="mb-1 block">
             <Label
-              htmlFor="status"
+              htmlFor="gender"
               className="text-xs dark:text-black md:text-base xl:text-lg"
             >
-              Status
+              gender
             </Label>
           </div>
           <Select
-            value={status}
-            onChange={(e) => setstatus(e.target.value)}
-            id="status"
+            value={gender}
+            onChange={(e) => setgender(e.target.value)}
+            id="gender"
             required
           >
             <option value="Men's Shoes">Men's Shoes</option>

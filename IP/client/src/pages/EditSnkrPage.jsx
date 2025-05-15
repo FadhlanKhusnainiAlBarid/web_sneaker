@@ -73,6 +73,8 @@ function EditSnkrPage() {
           image={image}
           information={information}
           setinformation={setinformation}
+          quantity={quantity}
+          setquantity={setquantity}
           handleAddImage={handleAddImage}
           handleAddInputColor={handleAddInputColor}
           handleDeleteInputColor={handleDeleteInputColor}

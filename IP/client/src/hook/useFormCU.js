@@ -11,6 +11,7 @@ function useFormCU() {
   const [price, setprice] = useState("");
   const [status, setstatus] = useState("Men's Shoes");
   const [image, setimage] = useState([["", ""]]);
+  const [quantity, setquantity] = useState(0);
 
   const [selectColor, setselectColor] = useState(0);
   const [selectImage, setselectImage] = useState(1);
@@ -65,6 +66,7 @@ function useFormCU() {
             [`color_${i + 1}`]: d,
           });
     });
+    queryResults.quantity = quantity;
 
     return queryResults;
   };
@@ -143,6 +145,28 @@ function useFormCU() {
           icon: "error",
         });
         return;
+      }
+
+      if (queryResult.quantity === 0) {
+        errorMessage =
+          "Items will not appear if quantity is 0, are you sure about this?";
+        await new Promise((resolve) => {
+          Swal.fire({
+            title: "Status Add",
+            text: `${errorMessage}`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, I'am sure!",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              resolve();
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+              return;
+            }
+          });
+        });
       }
 
       dispatch(addSnkr(queryResult));
@@ -238,6 +262,28 @@ function useFormCU() {
         return;
       }
 
+      if (queryResult.quantity === 0) {
+        errorMessage =
+          "Items will not appear if quantity is 0, are you sure about this?";
+        await new Promise((resolve) => {
+          Swal.fire({
+            title: "Status Add",
+            text: `${errorMessage}`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, I'am sure!",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              resolve();
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+              return;
+            }
+          });
+        });
+      }
+
       dispatch(editSnkr(queryResult));
       Swal.fire({
         title: "Status Edit",
@@ -260,6 +306,7 @@ function useFormCU() {
     setprice("");
     setimage([["", ""]]);
     setinformation("");
+    setquantity(0);
     setselectColor(0);
     setselectImage(1);
   }, []);
@@ -275,6 +322,8 @@ function useFormCU() {
     setimage,
     information,
     setinformation,
+    quantity,
+    setquantity,
     selectColor,
     setselectColor,
     selectImage,

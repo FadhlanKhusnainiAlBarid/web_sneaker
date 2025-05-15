@@ -17,6 +17,8 @@ function AddSnkrPage() {
     setimage,
     information,
     setinformation,
+    quantity,
+    setquantity,
     selectColor,
     setselectColor,
     selectImage,
@@ -55,6 +57,8 @@ function AddSnkrPage() {
           setimage={setimage}
           information={information}
           setinformation={setinformation}
+          quantity={quantity}
+          setquantity={setquantity}
           handleAddImage={handleAddImage}
           handleAddInputColor={handleAddInputColor}
           handleDeleteInputColor={handleDeleteInputColor}

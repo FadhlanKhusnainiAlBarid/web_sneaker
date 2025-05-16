@@ -18,9 +18,10 @@ function Home() {
 
   useEffect(() => {
     console.log(genderFilter, priceFilter);
-    setTimeout(() => {
+    const sub = setTimeout(() => {
       dispatch(FilterSnksr([search, genderFilter, priceFilter]));
     }, 1500);
+    return () => clearTimeout(sub);
   }, [genderFilter, priceFilter, search]);
 
   return (
@@ -32,6 +33,8 @@ function Home() {
             id="search"
             type="search"
             placeholder="Search name"
+            color=""
+            className="min-w-56"
             value={search.value}
             onChange={(e) =>
               setsearch((prev) => {

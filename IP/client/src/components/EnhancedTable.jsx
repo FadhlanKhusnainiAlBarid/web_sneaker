@@ -258,32 +258,32 @@ EnhancedTableHead.propTypes = {
 function EnhancedTableToolbar(props) {
   const { numSelected, selected, setSelected } = props;
   const dispatch = useDispatch();
-  const [filter, setfilter] = React.useState([
-    {
-      field: "name",
-      value: "",
-    },
-    {
-      field: "gender",
-      op: "==",
-      value: "",
-    },
-    {
-      field: "price",
-      op: "==",
-      value: "",
-    },
-  ]);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  // const [filter, setfilter] = React.useState([
+  //   {
+  //     field: "name",
+  //     value: "",
+  //   },
+  //   {
+  //     field: "gender",
+  //     op: "==",
+  //     value: "",
+  //   },
+  //   {
+  //     field: "price",
+  //     op: "==",
+  //     value: "",
+  //   },
+  // ]);
+  // const [anchorEl, setAnchorEl] = React.useState(null);
 
-  React.useEffect(() => {
-    if (filter[0].value || filter[1].value) {
-      console.log(filter);
-      setTimeout(() => {
-        dispatch(FilterSnksr(filter));
-      }, 1500);
-    }
-  }, [filter]);
+  // React.useEffect(() => {
+  //   if (filter[0].value || filter[1].value) {
+  //     console.log(filter);
+  //     setTimeout(() => {
+  //       dispatch(FilterSnksr(filter));
+  //     }, 1500);
+  //   }
+  // }, [filter]);
 
   const handleDelete = async () => {
     Swal.fire({
@@ -307,16 +307,16 @@ function EnhancedTableToolbar(props) {
     });
   };
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleClick = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
 
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
+  // const open = Boolean(anchorEl);
+  // const id = open ? "simple-popover" : undefined;
   return (
     <Toolbar
       className="flex justify-between"
@@ -344,37 +344,45 @@ function EnhancedTableToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
-        <TextInput
-          id="search"
-          type="search"
-          placeholder="Search Name"
-          className="w-2/4 md:w-2/5 lg:w-1/4"
-          color=""
-          onChange={(e) => {
-            // const capitalizeWords = (s) => {
-            //   let arrayString = s.split(" ");
-            //   let newString = "";
-            //   arrayString.forEach((string, i) =>
-            //     i === 0
-            //       ? string &&
-            //         (newString +=
-            //           String(string[0]).toUpperCase() +
-            //           string.slice(1, string.length))
-            //       : string &&
-            //         (newString += ` ${
-            //           String(string[0]).toUpperCase() +
-            //           string.slice(1, string.length)
-            //         }`)
-            //   );
-            //   return newString;
-            // };
-            setfilter((prev) =>
-              prev.map((d) =>
-                d.field === "name" ? { ...d, value: e.target.value } : { ...d }
-              )
-            );
-          }}
-        />
+        <Typography
+          sx={{ flex: "1 1 100%" }}
+          color="inherit"
+          variant="subtitle1"
+          component="div"
+        >
+          Table
+        </Typography>
+        // <TextInput
+        //   id="search"
+        //   type="search"
+        //   placeholder="Search Name"
+        //   className="w-2/4 md:w-2/5 lg:w-1/4"
+        //   color=""
+        //   onChange={(e) => {
+        //     // const capitalizeWords = (s) => {
+        //     //   let arrayString = s.split(" ");
+        //     //   let newString = "";
+        //     //   arrayString.forEach((string, i) =>
+        //     //     i === 0
+        //     //       ? string &&
+        //     //         (newString +=
+        //     //           String(string[0]).toUpperCase() +
+        //     //           string.slice(1, string.length))
+        //     //       : string &&
+        //     //         (newString += ` ${
+        //     //           String(string[0]).toUpperCase() +
+        //     //           string.slice(1, string.length)
+        //     //         }`)
+        //     //   );
+        //     //   return newString;
+        //     // };
+        //     setfilter((prev) =>
+        //       prev.map((d) =>
+        //         d.field === "name" ? { ...d, value: e.target.value } : { ...d }
+        //       )
+        //     );
+        //   }}
+        // />
       )}
       {numSelected == 1 && (
         <Link to={`/edit_sneaker/${selected}`}>
@@ -400,7 +408,7 @@ function EnhancedTableToolbar(props) {
               </IconButton>
             </Tooltip>
           </Link>
-          <Tooltip
+          {/* <Tooltip
             aria-describedby={id}
             variant="contained"
             onClick={handleClick}
@@ -507,7 +515,7 @@ function EnhancedTableToolbar(props) {
                 Price: Low-High
               </p>
             </div>
-          </Popover>
+          </Popover> */}
         </div>
       )}
     </Toolbar>
@@ -527,7 +535,7 @@ let Rupiah = new Intl.NumberFormat("id-ID", {
 
 export default function EnhancedTable() {
   const dispatch = useDispatch();
-  const { snkrs, snkrsFilter, loading } = useSelector((state) => state.snkrs);
+  const { snkrs, loading } = useSelector((state) => state.snkrs);
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");

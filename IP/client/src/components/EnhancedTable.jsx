@@ -18,14 +18,17 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
+import Popover from "@mui/material/Popover";
+import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import AddIcon from "@mui/icons-material/Add";
 import EditDocumentIcon from "@mui/icons-material/EditDocument";
 import { visuallyHidden } from "@mui/utils";
+import { TextInput, HR } from "flowbite-react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { deleteSnkr, fetchSnkrs } from "../app/actions";
+import { deleteSnkr, fetchSnkrs, FilterSnksr } from "../app/actions";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import TableRowSnkr from "./TableRowSnkr";
@@ -255,6 +258,32 @@ EnhancedTableHead.propTypes = {
 function EnhancedTableToolbar(props) {
   const { numSelected, selected, setSelected } = props;
   const dispatch = useDispatch();
+  const [filter, setfilter] = React.useState([
+    {
+      field: "name",
+      value: "",
+    },
+    {
+      field: "gender",
+      op: "==",
+      value: "",
+    },
+    {
+      field: "price",
+      op: "==",
+      value: "",
+    },
+  ]);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  React.useEffect(() => {
+    if (filter[0].value || filter[1].value) {
+      console.log(filter);
+      setTimeout(() => {
+        dispatch(FilterSnksr(filter));
+      }, 1500);
+    }
+  }, [filter]);
 
   const handleDelete = async () => {
     Swal.fire({
@@ -277,8 +306,20 @@ function EnhancedTableToolbar(props) {
       }
     });
   };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
   return (
     <Toolbar
+      className="flex justify-between"
       sx={[
         {
           pl: { sm: 2 },
@@ -303,14 +344,37 @@ function EnhancedTableToolbar(props) {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Table
-        </Typography>
+        <TextInput
+          id="search"
+          type="search"
+          placeholder="Search Name"
+          className="w-2/4 md:w-2/5 lg:w-1/4"
+          color=""
+          onChange={(e) => {
+            // const capitalizeWords = (s) => {
+            //   let arrayString = s.split(" ");
+            //   let newString = "";
+            //   arrayString.forEach((string, i) =>
+            //     i === 0
+            //       ? string &&
+            //         (newString +=
+            //           String(string[0]).toUpperCase() +
+            //           string.slice(1, string.length))
+            //       : string &&
+            //         (newString += ` ${
+            //           String(string[0]).toUpperCase() +
+            //           string.slice(1, string.length)
+            //         }`)
+            //   );
+            //   return newString;
+            // };
+            setfilter((prev) =>
+              prev.map((d) =>
+                d.field === "name" ? { ...d, value: e.target.value } : { ...d }
+              )
+            );
+          }}
+        />
       )}
       {numSelected == 1 && (
         <Link to={`/edit_sneaker/${selected}`}>
@@ -328,13 +392,123 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Link to="/add_sneaker">
-          <Tooltip title="Add Snkr">
+        <div>
+          <Link to="/add_sneaker">
+            <Tooltip title="Add Snkr">
+              <IconButton>
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
+          </Link>
+          <Tooltip
+            aria-describedby={id}
+            variant="contained"
+            onClick={handleClick}
+            title="Filter"
+          >
             <IconButton>
-              <AddIcon />
+              <FilterListIcon />
             </IconButton>
           </Tooltip>
-        </Link>
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+          >
+            <div className="py-2 px-4 font-semibold">
+              <p className="mb-px" sx={{ p: 0.5 }}>
+                Gender:
+              </p>
+              <p
+                className={`cursor-pointer ${
+                  filter[1].value === "Men's Shoes" && "text-gray-300"
+                }`}
+                onClick={() =>
+                  setfilter((prev) =>
+                    prev.map((d) =>
+                      d.field === "gender"
+                        ? d.value === "Men's Shoes"
+                          ? { ...d, value: "" }
+                          : { ...d, value: "Men's Shoes" }
+                        : { ...d }
+                    )
+                  )
+                }
+                sx={{ p: 0.5 }}
+              >
+                Men
+              </p>
+              <p
+                className={`cursor-pointer ${
+                  filter[1].value === "Women's Shoes" && "text-gray-300"
+                }`}
+                onClick={() =>
+                  setfilter((prev) =>
+                    prev.map((d) =>
+                      d.field === "gender"
+                        ? d.value === "Women's Shoes"
+                          ? { ...d, value: "" }
+                          : { ...d, value: "Women's Shoes" }
+                        : { ...d }
+                    )
+                  )
+                }
+                sx={{ p: 0.5 }}
+              >
+                Women
+              </p>
+            </div>
+            <HR className="my-1 mx-3" />
+            <div className="py-2 px-4 font-semibold">
+              <p className="mb-px" sx={{ p: 0.5 }}>
+                Sort By:
+              </p>
+              <p
+                className={`cursor-pointer ${
+                  filter[2].value === "asc" && "text-gray-300"
+                }`}
+                onClick={() =>
+                  setfilter((prev) =>
+                    prev.map((d) =>
+                      d.field === "price"
+                        ? d.value === "asc"
+                          ? { ...d, value: "" }
+                          : { ...d, value: "asc" }
+                        : { ...d }
+                    )
+                  )
+                }
+                sx={{ p: 0.5 }}
+              >
+                Price: High-Low
+              </p>
+              <p
+                className={`cursor-pointer ${
+                  filter[2].value === "desc" && "text-gray-300"
+                }`}
+                onClick={() =>
+                  setfilter((prev) =>
+                    prev.map((d) =>
+                      d.field === "price"
+                        ? d.value === "desc"
+                          ? { ...d, value: "" }
+                          : { ...d, value: "desc" }
+                        : { ...d }
+                    )
+                  )
+                }
+                sx={{ p: 0.5 }}
+              >
+                Price: Low-High
+              </p>
+            </div>
+          </Popover>
+        </div>
       )}
     </Toolbar>
   );
@@ -353,7 +527,7 @@ let Rupiah = new Intl.NumberFormat("id-ID", {
 
 export default function EnhancedTable() {
   const dispatch = useDispatch();
-  const { snkrs, loading } = useSelector((state) => state.snkrs);
+  const { snkrs, snkrsFilter, loading } = useSelector((state) => state.snkrs);
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -437,8 +611,8 @@ export default function EnhancedTable() {
           >
             <EnhancedTableHead
               numSelected={selected.length}
-              // order={order}
-              // orderBy={orderBy}
+              order={order}
+              orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={snkrs?.length}

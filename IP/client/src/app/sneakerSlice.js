@@ -4,12 +4,16 @@ export const snkrsSlice = createSlice({
   name: "counter",
   initialState: {
     snkrs: [],
+    snkrsFilter: [],
     snkr: null,
     loading: false,
   },
   reducers: {
     setSnkrs: (state, actions) => {
       state.snkrs = actions.payload;
+    },
+    setSnkrsFilter: (state, actions) => {
+      state.snkrsFilter = actions.payload;
     },
     setSnkr: (state, actions) => {
       state.snkr = actions.payload;
@@ -21,6 +25,7 @@ export const snkrsSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setSnkrs, setSnkr, setLoading } = snkrsSlice.actions;
+export const { setSnkrs, setSnkrsFilter, setSnkr, setLoading } =
+  snkrsSlice.actions;
 
 export default snkrsSlice.reducer;

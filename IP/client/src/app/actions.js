@@ -68,6 +68,8 @@ export const addSnkr = (products) => async (dispatch) => {
     await addDoc(collection(db, "sneakers"), {
       ...products,
       price: Number(products.price),
+      quantity: Number(products.quantity),
+      nameLowerCase: products.name.toLowerCase(),
     });
     dispatch(fetchSnkrs());
   } catch (error) {
@@ -83,6 +85,8 @@ export const editSnkr = (products) => async (dispatch) => {
     await updateDoc(doc(db, "sneakers", products.id), {
       ...products,
       price: Number(products.price),
+      quantity: Number(products.quantity),
+      nameLowerCase: products.name.toLowerCase(),
     });
     dispatch(fetchSnkrs());
   } catch (error) {
@@ -112,48 +116,22 @@ export const FilterSnksr = (queryTarget) => async (dispatch) => {
     console.log(queryTarget);
     let q = query(collection(db, "sneakers"));
 
-    await queryTarget.forEach((element) => {
-      if (element.value !== "" && element.field !== "name") {
+    await queryTarget.query.forEach((element) => {
+      if (element.value !== "") {
         q =
-          element.field === "gender"
+          element.field === "gender" || element.field === "nameLowerCase"
             ? query(q, where(element.field, element.op, element.value))
             : query(q, orderBy(element.field, element.value));
       }
     });
 
     const response = await getDocs(q);
-    let data = response.docs.map((doc) => {
+    const data = response.docs.map((doc) => {
       return {
         id: doc.id,
         ...doc.data(),
       };
     });
-
-    if (queryTarget[0].value) {
-      const capitalizeWords = (s) => {
-        let arrayString = s.split(" ");
-        let newString = "";
-        arrayString.forEach((string, i) =>
-          i === 0
-            ? string &&
-              (newString +=
-                String(string[0]).toUpperCase() +
-                string.slice(1, string.length))
-            : string &&
-              (newString += ` ${
-                String(string[0]).toUpperCase() + string.slice(1, string.length)
-              }`)
-        );
-        return newString;
-      };
-      const newData = [];
-      data.map((d) => {
-        d.name.includes(capitalizeWords(queryTarget[0].value)) &&
-          newData.push({ ...d });
-      });
-      dispatch(setSnkrsFilter(newData));
-      return;
-    }
 
     dispatch(setSnkrsFilter(data));
   } catch (error) {

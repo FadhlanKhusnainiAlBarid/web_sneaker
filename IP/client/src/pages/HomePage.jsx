@@ -1,14 +1,25 @@
 import React, { useEffect, useState } from "react";
+import Tooltip from "@mui/material/Tooltip";
 import CardsProduct from "../components/CardsProduct";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSnkrs, FilterSnksr } from "../app/actions";
-import { Dropdown, DropdownItem, TextInput } from "flowbite-react";
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  Pagination,
+  TextInput,
+} from "flowbite-react";
 import { validatePassword } from "firebase/auth";
 
 function Home() {
   const dispatch = useDispatch();
   const { snkrsFilter, loading } = useSelector((state) => state.snkrs);
-  const [search, setsearch] = useState({ field: "name", value: "" });
+  const [search, setsearch] = useState({
+    field: "nameLowerCase",
+    op: "==",
+    value: "",
+  });
   const [genderFilter, setgenderFilter] = useState({
     field: "gender",
     op: "==",
@@ -16,32 +27,45 @@ function Home() {
   });
   const [priceFilter, setpriceFilter] = useState({ field: "price", value: "" });
 
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const onPageChange = (page) => setCurrentPage(page);
+
   useEffect(() => {
-    console.log(genderFilter, priceFilter);
     const sub = setTimeout(() => {
-      dispatch(FilterSnksr([search, genderFilter, priceFilter]));
+      dispatch(
+        FilterSnksr({
+          query: [
+            { ...search, value: search.value.toLowerCase() },
+            genderFilter,
+            priceFilter,
+          ],
+        })
+      );
     }, 1500);
     return () => clearTimeout(sub);
   }, [genderFilter, priceFilter, search]);
 
   return (
     <div className="container mx-auto space-y-6">
-      <div className="space-y-3 mb-[99999px]">
+      <div className="space-y-3 mb-12">
         <div className="flex gap-3.5 items-center sticky top-0 z-10 bg-white py-3">
           <h1 className="ml-6 text-lg font-medium">Populer</h1>
-          <TextInput
-            id="search"
-            type="search"
-            placeholder="Search name"
-            color=""
-            className="min-w-56"
-            value={search.value}
-            onChange={(e) =>
-              setsearch((prev) => {
-                return { ...prev, value: e.target.value };
-              })
-            }
-          />
+          <Tooltip title="Search with full name">
+            <TextInput
+              id="search"
+              type="search"
+              placeholder="Search name"
+              color=""
+              className="min-w-56"
+              value={search.value}
+              onChange={(e) =>
+                setsearch((prev) => {
+                  return { ...prev, value: e.target.value };
+                })
+              }
+            />
+          </Tooltip>
           <Dropdown label="Filter" dismissOnClick={false}>
             <DropdownItem
               className={`${
@@ -111,11 +135,19 @@ function Home() {
               {snkrsFilter.map((d) => (
                 <CardsProduct key={d.id} data={d} />
               ))}
-              {/* snkrs.map((d) => <CardsProduct key={d.id} data={d} />) */}
             </>
           )}
           <div className="mb-12" />
         </div>
+        {!loading && (
+          <div className="flex py-1.5 gap-3.5 overflow-x-auto items-center sm:justify-center">
+            <Button>Prev</Button>
+            <span className="text-xl font-semibold">
+              Page <strong>1 </strong>of <strong>10</strong>
+            </span>
+            <Button>Next</Button>
+          </div>
+        )}
       </div>
     </div>
   );

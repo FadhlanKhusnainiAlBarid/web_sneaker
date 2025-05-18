@@ -10,6 +10,8 @@ import {
   query,
   where,
   orderBy,
+  limit,
+  startAfter,
 } from "firebase/firestore";
 import { setSnkrs, setSnkr, setLoading, setSnkrsFilter } from "./sneakerSlice";
 
@@ -113,7 +115,7 @@ export const deleteSnkr = (arrayId) => async (dispatch) => {
 export const FilterSnksr = (queryTarget) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    console.log(queryTarget);
+    console.log(queryTarget.paginate);
     let q = query(collection(db, "sneakers"));
 
     await queryTarget.query.forEach((element) => {
@@ -124,6 +126,36 @@ export const FilterSnksr = (queryTarget) => async (dispatch) => {
             : query(q, orderBy(element.field, element.value));
       }
     });
+
+    const TOTAL_SNEAKER = (await getDocs(q)).size;
+    const newTotalPage = Math.ceil(
+      TOTAL_SNEAKER / queryTarget.paginate.LIMIT_SNEAKER
+    );
+    queryTarget.paginate.settotalPage(newTotalPage);
+
+    // reset current page when trigger func, total page is more then current page
+    if (queryTarget.paginate.currentPage > newTotalPage) {
+      queryTarget.paginate.setcurrentPage(1);
+    }
+
+    q = query(q, limit(queryTarget.paginate.LIMIT_SNEAKER));
+
+    if (queryTarget.paginate.currentPage > 1) {
+      const documentSnapshots = await getDocs(
+        query(
+          q,
+          limit(
+            (queryTarget.paginate.currentPage - 1) *
+              queryTarget.paginate.LIMIT_SNEAKER
+          )
+        )
+      );
+
+      const lastVisible =
+        documentSnapshots.docs[documentSnapshots.docs.length - 1];
+
+      q = query(q, startAfter(lastVisible));
+    }
 
     const response = await getDocs(q);
     const data = response.docs.map((doc) => {

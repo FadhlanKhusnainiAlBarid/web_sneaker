@@ -14,6 +14,8 @@ import {
 import FilterListIcon from "@mui/icons-material/FilterList";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 
+const LIMIT_SNEAKER = 4;
+
 function Home() {
   const dispatch = useDispatch();
   const { snkrsFilter, loading } = useSelector((state) => state.snkrs);
@@ -30,6 +32,7 @@ function Home() {
   const [priceFilter, setpriceFilter] = useState({ field: "price", value: "" });
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, settotalPage] = useState(10);
 
   const onPageChange = (page) => setCurrentPage(page);
 
@@ -42,11 +45,18 @@ function Home() {
             genderFilter,
             priceFilter,
           ],
+          paginate: {
+            LIMIT_SNEAKER,
+            currentPage,
+            setCurrentPage,
+            totalPage,
+            settotalPage,
+          },
         })
       );
     }, 1500);
     return () => clearTimeout(sub);
-  }, [genderFilter, priceFilter, search]);
+  }, [genderFilter, priceFilter, search, currentPage]);
 
   return (
     <div className="container mx-auto space-y-6">
@@ -178,11 +188,24 @@ function Home() {
           <>
             {snkrsFilter.length > 0 ? (
               <div className="size-full flex py-1.5 gap-3.5 overflow-x-auto items-center justify-center">
-                <Button>Prev</Button>
+                <Button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
+                >
+                  Prev
+                </Button>
                 <span className="text-xl font-semibold">
-                  Page <strong>1 </strong>of <strong>10</strong>
+                  Page <strong>{currentPage} </strong>of{" "}
+                  <strong>{totalPage}</strong>
                 </span>
-                <Button>Next</Button>
+                <Button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPage))
+                  }
+                >
+                  Next
+                </Button>
               </div>
             ) : null}
           </>

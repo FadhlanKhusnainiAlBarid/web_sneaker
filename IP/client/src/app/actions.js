@@ -137,6 +137,8 @@ export const FilterSnksr = (queryTarget) => async (dispatch) => {
   } catch (error) {
     console.error(error);
   } finally {
-    dispatch(setLoading(false));
+    setTimeout(() => {
+      dispatch(setLoading(false));
+    }, 550);
   }
 };

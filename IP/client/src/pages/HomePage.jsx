@@ -18,7 +18,7 @@ const LIMIT_SNEAKER = 4;
 
 function Home() {
   const dispatch = useDispatch();
-  const { snkrsFilter, loading } = useSelector((state) => state.snkrs);
+  const { snkrsFilter, loading } = useSelector((state) => state.sneaker);
   const [search, setsearch] = useState({
     field: "nameLowerCase",
     op: "==",

@@ -27,7 +27,7 @@ let Rupiah = new Intl.NumberFormat("id-ID", {
 function DetailPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { snkr, loading } = useSelector((state) => state.snkrs);
+  const { snkr, loading } = useSelector((state) => state.sneaker);
 
   const [selectColor, setselectColor] = useState(1);
   const [selectImage, setselectImage] = useState(1);

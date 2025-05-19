@@ -535,7 +535,7 @@ let Rupiah = new Intl.NumberFormat("id-ID", {
 
 export default function EnhancedTable() {
   const dispatch = useDispatch();
-  const { snkrs, loading } = useSelector((state) => state.snkrs);
+  const { snkrs, loading } = useSelector((state) => state.sneaker);
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");

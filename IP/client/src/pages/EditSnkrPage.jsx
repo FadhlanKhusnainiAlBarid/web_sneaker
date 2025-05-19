@@ -9,7 +9,7 @@ import useFormCU from "../hook/useFormCU";
 function EditSnkrPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { snkr, loading } = useSelector((state) => state.snkrs);
+  const { snkr, loading } = useSelector((state) => state.sneaker);
   const {
     name,
     setname,

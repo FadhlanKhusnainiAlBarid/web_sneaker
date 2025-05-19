@@ -5,7 +5,7 @@ import useFormCU from "../hook/useFormCU";
 import { useSelector } from "react-redux";
 
 function AddSnkrPage() {
-  const { loading } = useSelector((state) => state.snkrs);
+  const { loading } = useSelector((state) => state.sneaker);
   const {
     name,
     setname,

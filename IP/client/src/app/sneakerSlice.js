@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const snkrsSlice = createSlice({
-  name: "counter",
+export const sneakerSlice = createSlice({
+  name: "sneaker",
   initialState: {
     snkrs: [],
     snkrsFilter: [],
@@ -26,6 +26,6 @@ export const snkrsSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const { setSnkrs, setSnkrsFilter, setSnkr, setLoading } =
-  snkrsSlice.actions;
+  sneakerSlice.actions;
 
-export default snkrsSlice.reducer;
+export default sneakerSlice.reducer;

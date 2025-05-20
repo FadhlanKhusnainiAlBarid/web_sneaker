@@ -15,6 +15,7 @@ import EditSnkrPage from "./pages/EditSnkrPage";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 import DetailPage from "./pages/DetailPage";
+import CartPage from "./pages/CartPage";
 
 function ProtectAdminPage() {
   const { user, role } = useContext(AuthContext);
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: "detail/:id",
         element: <DetailPage />,
+      },
+      {
+        path: "cart",
+        element: <CartPage />,
       },
       {
         element: <ProtectAdminPage />,

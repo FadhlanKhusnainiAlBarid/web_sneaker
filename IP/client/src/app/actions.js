@@ -115,7 +115,7 @@ export const deleteSnkr = (arrayId) => async (dispatch) => {
 export const FilterSnksr = (queryTarget) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    console.log(queryTarget.paginate);
+    // console.log(queryTarget);
     let q = query(collection(db, "sneakers"));
 
     await queryTarget.query.forEach((element) => {
@@ -135,7 +135,7 @@ export const FilterSnksr = (queryTarget) => async (dispatch) => {
 
     // reset current page when trigger func, total page is more then current page
     if (queryTarget.paginate.currentPage > newTotalPage) {
-      queryTarget.paginate.setcurrentPage(1);
+      queryTarget.paginate.setCurrentPage(1);
     }
 
     q = query(q, limit(queryTarget.paginate.LIMIT_SNEAKER));
@@ -171,6 +171,6 @@ export const FilterSnksr = (queryTarget) => async (dispatch) => {
   } finally {
     setTimeout(() => {
       dispatch(setLoading(false));
-    }, 550);
+    }, 250);
   }
 };

@@ -54,7 +54,7 @@ function Home() {
           },
         })
       );
-    }, 1500);
+    }, 350);
     return () => clearTimeout(sub);
   }, [genderFilter, priceFilter, search, currentPage]);
 

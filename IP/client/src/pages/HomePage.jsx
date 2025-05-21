@@ -34,8 +34,6 @@ function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, settotalPage] = useState(10);
 
-  const onPageChange = (page) => setCurrentPage(page);
-
   useEffect(() => {
     const sub = setTimeout(() => {
       dispatch(

@@ -14,6 +14,7 @@ import { db } from "../config/firebase";
 export const addCart = (queryId) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
+
     const responseCheck = await getDocs(
       query(
         collection(db, "carts"),
@@ -26,8 +27,20 @@ export const addCart = (queryId) => async (dispatch) => {
       await getDoc(doc(db, "sneakers", queryId.sneakerId))
     ).data();
 
-    responseCheck.forEach((docCheck) => {
-      if (GetSneaker.quantity === docCheck.data().quantityCheckout) {
+    if (!queryId.uid) {
+      dispatch(
+        setStatus({
+          massage: `You mush login to add ${GetSneaker.name} on your cart!`,
+          icon: "error",
+        })
+      );
+      return;
+    }
+
+    if (responseCheck.docs.length > 0) {
+      if (
+        GetSneaker.quantity === responseCheck.docs[0].data().quantityCheckout
+      ) {
         dispatch(
           setStatus({
             massage:
@@ -37,37 +50,50 @@ export const addCart = (queryId) => async (dispatch) => {
         );
         return;
       }
-      if (docCheck.exists()) {
-        const updateData = async () => {
-          await updateDoc(doc(db, "carts", docCheck.id), {
-            ...docCheck.data(),
-            quantityCheckout: queryId.quantityCheckout
-              ? queryId.quantityCheckout
-              : docCheck.data().quantityCheckout + 1,
-          });
-        };
-        updateData();
-      } else {
-        const addData = async () => {
-          await addDoc(collection(db, "carts"), {
-            userId: query.uid,
-            sneakerId: query.sneakerId,
-            quantityCheckout: 1,
-          });
-        };
-        addData();
-      }
-      dispatch(
-        setStatus({
-          massage: `Success add ${GetSneaker.name} to cart!`,
-          icon: "success",
-        })
-      );
-    });
+      // responseCheck.forEach((docCheck) => {
+      //   if (docCheck.data().colorSelected === queryId.colorSelected) {
+      const updateData = async () => {
+        await updateDoc(doc(db, "carts", responseCheck.docs[0].id), {
+          ...responseCheck.docs[0].data(),
+          quantityCheckout: queryId.quantityCheckout
+            ? queryId.quantityCheckout
+            : responseCheck.docs[0].data().quantityCheckout + 1,
+        });
+      };
+      updateData();
+      //   } else {
+      //     const addData = async () => {
+      //       await addDoc(collection(db, "carts"), {
+      //         userId: queryId.uid,
+      //         sneakerId: queryId.sneakerId,
+      //         quantityCheckout: 1,
+      //         colorSelected: queryId.colorSelected,
+      //       });
+      //     };
+      //     addData();
+      //   }
+      // });
+    } else {
+      const addData = async () => {
+        await addDoc(collection(db, "carts"), {
+          userId: queryId.uid,
+          sneakerId: queryId.sneakerId,
+          quantityCheckout: 1,
+          // colorSelected: queryId.colorSelected,
+        });
+      };
+      addData();
+    }
+    dispatch(
+      setStatus({
+        massage: `Success add ${GetSneaker.name} to cart!`,
+        icon: "success",
+      })
+    );
   } catch (error) {
     dispatch(
       setStatus({
-        massage: error.massage,
+        massage: error.message,
         icon: "error",
       })
     );

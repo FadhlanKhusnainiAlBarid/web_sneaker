@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { Button } from "flowbite-react";
+import { Button, Spinner } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSnkr } from "../app/actions";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -19,6 +19,7 @@ import "../index.css";
 import { Pagination } from "swiper/modules";
 import { addCart } from "../app/actionsCart";
 import Swal from "sweetalert2";
+import { setStatus } from "../app/cartSlice";
 
 let Rupiah = new Intl.NumberFormat("id-ID", {
   style: "currency",
@@ -29,12 +30,23 @@ let Rupiah = new Intl.NumberFormat("id-ID", {
 function DetailPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { snkr, loading } = useSelector((state) => state.sneaker);
-  const { status } = useSelector((state) => state.cart);
+  const { snkr, loading: loadingSnkr } = useSelector((state) => state.sneaker);
+  const { status, loading: loadingAddCart } = useSelector(
+    (state) => state.cart
+  );
   const { user } = useContext(AuthContext);
 
   const [selectColor, setselectColor] = useState(1);
   const [selectImage, setselectImage] = useState(1);
+
+  useEffect(() => {
+    const sub = () => {
+      dispatch(setStatus(null));
+    };
+    return () => {
+      sub();
+    };
+  }, []);
 
   useEffect(() => {
     dispatch(fetchSnkr(id));
@@ -49,14 +61,17 @@ function DetailPage() {
   // }, [snkr]);
 
   const handleAddCart = () => {
-    try {
-      dispatch(addCart({ uid: user.uid, sneakerId: snkr.id }));
-    } catch (error) {
-      console.error(error);
-    }
+    dispatch(
+      addCart({
+        uid: user ? user.uid : null,
+        sneakerId: snkr.id,
+        // colorSelected: `color_${selectColor}`,
+      })
+    );
   };
 
   useEffect(() => {
+    console.log(status);
     if (status) {
       Swal.fire("Status Add Cart", status.massage, status.icon);
     }
@@ -122,7 +137,6 @@ function DetailPage() {
                 </button>
               </div>
               <img
-                // src={snkr && snkr.image[`color_${selectColor}`][selectImage]}
                 src={
                   snkr &&
                   Object.entries(snkr.image).sort()[selectColor - 1][1][
@@ -197,7 +211,11 @@ function DetailPage() {
               className="cursor-pointer w-full bg-black dark:bg-black dark:hover:bg-black/90 rounded-full"
               color="dark"
             >
-              Add to Chart
+              {loadingAddCart ? (
+                <Spinner size="md" color="gray" />
+              ) : (
+                "Add to Chart"
+              )}
             </Button>
             <Button
               className="cursor-pointer w-full dark:text-dark dark:bg-white dark:hover:bg-gray-50/90 rounded-full"

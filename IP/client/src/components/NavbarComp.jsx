@@ -41,7 +41,7 @@ function NavbarComp() {
                   <NavbarLink as={Link} to="/cart">
                     cart
                   </NavbarLink>
-                  <NavbarLink as={Link} to="/admin">
+                  <NavbarLink as={Link} to="/favourite">
                     favourite
                   </NavbarLink>
                 </>

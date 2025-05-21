@@ -16,6 +16,7 @@ import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 import DetailPage from "./pages/DetailPage";
 import CartPage from "./pages/CartPage";
+import FavouritePage from "./pages/FavouritePage";
 
 function ProtectAdminPage() {
   const { user, role } = useContext(AuthContext);
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
       {
         path: "cart",
         element: <CartPage />,
+      },
+      {
+        path: "favourite",
+        element: <FavouritePage />,
       },
       {
         element: <ProtectAdminPage />,

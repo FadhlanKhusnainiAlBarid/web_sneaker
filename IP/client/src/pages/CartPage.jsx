@@ -1,5 +1,5 @@
 import { Button, HR } from "flowbite-react";
-import React from "react";
+import React, { useState } from "react";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -7,6 +7,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import { Link } from "react-router-dom";
 
 function CartPage() {
+  const [quantity, setquantity] = useState(10);
   return (
     <div className="container mx-auto px-2">
       <div className="lg:grid lg:grid-cols-12 lg:gap-x-4 pt-4 h-screen">
@@ -36,6 +37,9 @@ function CartPage() {
                       <div className="flex size-fit rounded-full border border-gray-300">
                         <div className="rounded-l-full bg-white">
                           <button
+                            onClick={() =>
+                              setquantity((prev) => Math.max(prev - 1, 0))
+                            }
                             className="size-10 cursor-pointer rounded-full hover:bg-gray-300 text-black"
                             color=""
                           >
@@ -44,12 +48,16 @@ function CartPage() {
                         </div>
                         <input
                           className="inputQuantity bg-gray-50 border-x-0 border-gray-300 h-10 w-6 text-center text-gray-900 text-lg block py-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black"
-                          value={10}
+                          value={quantity}
                           type="number"
                           disabled
                         />
                         <div className="rounded-r-full bg-white">
                           <button
+                            // this max will got from max quantity sneaker
+                            onClick={() =>
+                              setquantity((prev) => Math.min(prev + 1, 10))
+                            }
                             className="size-10 cursor-pointer rounded-full bg-white hover:bg-gray-300 text-black"
                             color=""
                           >

@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { mergeSlotProps } from "@mui/material";
 import { Button } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSnkr } from "../app/actions";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { AuthContext } from "../context/AuthContext";
 
 // Import Swiper styles
 import "swiper/css";
@@ -17,6 +17,8 @@ import "../index.css";
 
 // import required modules
 import { Pagination } from "swiper/modules";
+import { addCart } from "../app/actionsCart";
+import Swal from "sweetalert2";
 
 let Rupiah = new Intl.NumberFormat("id-ID", {
   style: "currency",
@@ -28,6 +30,8 @@ function DetailPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { snkr, loading } = useSelector((state) => state.sneaker);
+  const { status } = useSelector((state) => state.cart);
+  const { user } = useContext(AuthContext);
 
   const [selectColor, setselectColor] = useState(1);
   const [selectImage, setselectImage] = useState(1);
@@ -38,9 +42,25 @@ function DetailPage() {
 
   // useEffect(() => {
   //   if (snkr) {
-  //     console.log(snkr.image[`color_${selectColor}`][selectImage]);
+  //     console.log(
+  //       Object.entries(snkr.image).sort()[1][selectColor][selectImage]
+  //     );
   //   }
   // }, [snkr]);
+
+  const handleAddCart = () => {
+    try {
+      dispatch(addCart({ uid: user.uid, sneakerId: snkr.id }));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (status) {
+      Swal.fire("Status Add Cart", status.massage, status.icon);
+    }
+  }, [status]);
   return (
     <div className="container mx-auto">
       <div className="lg:grid lg:grid-cols-12 lg:gap-x-4 pt-4">
@@ -48,30 +68,29 @@ function DetailPage() {
           <div className="2xl:w-4/5 xl:w-5/6 lg:w-6/7 ml-auto flex justify-between gap-x-3.5 sticky top-0">
             <div className="2xl:h-[658.271px] xl:h-[553.656px] lg:h-[439.031px] w-23 lg:w-24 no-scrollbar overflow-y-auto">
               {snkr &&
-                Object.entries(snkr.image).map(([_, value], index) => (
-                  <div
-                    key={index}
-                    className="h-fit flex flex-col flex-nowrap gap-y-1.5"
-                  >
-                    {index === selectColor - 1 && (
-                      <>
-                        {value.slice(1).map((v, i) => (
-                          <button
-                            key={i}
-                            type="button"
-                            onMouseEnter={() => setselectImage(i + 1)}
-                            className={`relative size-19 cursor-pointer overflow-hidden rounded`}
-                          >
-                            {selectImage === i + 1 && (
-                              <div className="absolute size-full bg-black/40" />
-                            )}
-                            <img className="size-19" src={v} />
-                          </button>
-                        ))}
-                      </>
-                    )}
-                  </div>
-                ))}
+                Object.entries(snkr.image)
+                  .sort()
+                  .map(([_, value], index) => (
+                    <div key={index}>
+                      {index === selectColor - 1 && (
+                        <div className="h-fit flex flex-col flex-nowrap gap-y-1.5">
+                          {value.slice(1).map((v, i) => (
+                            <button
+                              key={i}
+                              type="button"
+                              onMouseEnter={() => setselectImage(i + 1)}
+                              className={`relative size-19 cursor-pointer overflow-hidden rounded`}
+                            >
+                              {selectImage === i + 1 && (
+                                <div className="absolute size-full bg-black/40" />
+                              )}
+                              <img className="size-19" src={v} />
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
             </div>
             <div className="relative size-full">
               <div className="absolute right-1/20 bottom-1/20 flex justify-between gap-x-2.5 *:flex *:justify-center *:items-center">
@@ -103,7 +122,13 @@ function DetailPage() {
                 </button>
               </div>
               <img
-                src={snkr && snkr.image[`color_${selectColor}`][selectImage]}
+                // src={snkr && snkr.image[`color_${selectColor}`][selectImage]}
+                src={
+                  snkr &&
+                  Object.entries(snkr.image).sort()[selectColor - 1][1][
+                    selectImage
+                  ]
+                }
               />
             </div>
           </div>
@@ -125,45 +150,50 @@ function DetailPage() {
               className="mySwiper"
             >
               {snkr &&
-                Object.entries(snkr.image).map(([_, value], index) => (
-                  <>
-                    {index === selectColor - 1 && (
-                      <>
-                        {value.slice(1).map((v) => (
-                          <SwiperSlide>
-                            <img src={v} alt={snkr.name} />
-                          </SwiperSlide>
-                        ))}
-                      </>
-                    )}
-                  </>
-                ))}
+                Object.entries(snkr.image)
+                  .sort()
+                  .map(([_, value], index) => (
+                    <div key={index}>
+                      {index === selectColor - 1 && (
+                        <>
+                          {value.slice(1).map((v) => (
+                            <SwiperSlide>
+                              <img src={v} alt={snkr.name} />
+                            </SwiperSlide>
+                          ))}
+                        </>
+                      )}
+                    </div>
+                  ))}
             </Swiper>
           </div>
           <div className="w-full overflow-x-scroll lg:overflow-hidden">
             <div className="w-fit flex flex-nowrap gap-2.5">
               {snkr &&
-                Object.keys(snkr.image).map((k, i) => (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setselectColor(i + 1);
-                      setselectImage(1);
-                    }}
-                    key={i}
-                    className={`cursor-pointer overflow-hidden size-28 lg:size-16 rounded ${
-                      selectColor == i + 1
-                        ? "border"
-                        : "hover:border border-black"
-                    } border-black`}
-                  >
-                    <img src={snkr.image[k][0]} alt="" />
-                  </button>
-                ))}
+                Object.keys(snkr.image)
+                  .sort()
+                  .map((k, i) => (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setselectColor(i + 1);
+                        setselectImage(1);
+                      }}
+                      key={i}
+                      className={`cursor-pointer overflow-hidden size-28 lg:size-16 rounded ${
+                        selectColor == i + 1
+                          ? "border"
+                          : "hover:border border-black"
+                      } border-black`}
+                    >
+                      <img src={snkr.image[k][0]} alt="" />
+                    </button>
+                  ))}
             </div>
           </div>
           <div className="mt-6 space-y-2 lg:px-0 px-4">
             <Button
+              onClick={handleAddCart}
               className="cursor-pointer w-full bg-black dark:bg-black dark:hover:bg-black/90 rounded-full"
               color="dark"
             >

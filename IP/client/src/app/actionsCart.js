@@ -57,7 +57,8 @@ export const fetchCarts = (uid) => async (dispatch) => {
   }
 };
 
-export const addCart = (queryId) => async (dispatch) => {
+export const addCart = (queryId) => async (dispatch, getState) => {
+  const { carts } = getState().cart;
   try {
     dispatch(setLoading(true));
 
@@ -102,6 +103,17 @@ export const addCart = (queryId) => async (dispatch) => {
         });
       };
       updateData();
+      if (carts.length > 0) {
+        dispatch(
+          setCarts(
+            carts.map((prev) => {
+              return prev.id === data.id
+                ? { ...prev, quantityCheckout: quantity }
+                : { ...prev };
+            })
+          )
+        );
+      }
     } else {
       const addData = async () => {
         await addDoc(collection(db, "carts"), {
@@ -120,7 +132,6 @@ export const addCart = (queryId) => async (dispatch) => {
       })
     );
   } catch (error) {
-    console.error(error);
     dispatch(
       setStatus({
         massage: error.message,
@@ -145,7 +156,7 @@ export const operatorCart = (query) => async (dispatch) => {
     newTotalItems += element.data().quantityCheckout;
   });
   dispatch(setTotalItems(newTotalItems));
-  dispatch(changeTotalPrice());
+  dispatch(changeTotalPrice(query.userId));
 };
 
 export const deleteCart = (query) => async (dispatch) => {
@@ -160,14 +171,14 @@ export const deleteCart = (query) => async (dispatch) => {
     newTotalItems += element.data().quantityCheckout;
   });
   dispatch(setTotalItems(newTotalItems));
-  dispatch(changeTotalPrice());
+  dispatch(changeTotalPrice(query.uid));
 };
 
-export const changeTotalPrice = () => async (dispatch) => {
+export const changeTotalPrice = (uid) => async (dispatch) => {
   const response = await getDocs(
-    collection(db, "carts"),
-    where("userId", "==", query.userId)
+    query(collection(db, "carts"), where("userId", "==", uid))
   );
+
   const dataAll = await Promise.all(
     response.docs.map((element) => {
       const getSnkr = async () => {
@@ -183,9 +194,14 @@ export const changeTotalPrice = () => async (dispatch) => {
       return getSnkr();
     })
   );
+  let newTotalItems = 0;
   let newTotalPrice = 0;
-  dataAll.forEach(
-    (element) => (newTotalPrice += element.quantityCheckout * element.price)
-  );
+  dataAll.forEach((element) => {
+    newTotalItems += element.quantityCheckout;
+    newTotalPrice += element.quantityCheckout * element.price;
+  });
+  dispatch(setTotalItems(newTotalItems));
   dispatch(setTotalPrice(newTotalPrice));
 };
+
+// export const

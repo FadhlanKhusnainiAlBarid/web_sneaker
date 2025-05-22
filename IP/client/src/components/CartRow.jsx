@@ -4,9 +4,10 @@ import AddIcon from "@mui/icons-material/Add";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { HR } from "flowbite-react";
-import { useDispatch } from "react-redux";
-import { deleteCart, operatorCart } from "../app/actionsCart";
+import { useDispatch, useSelector } from "react-redux";
+import { changeTotalPrice, deleteCart, operatorCart } from "../app/actionsCart";
 import { AuthContext } from "../context/AuthContext";
+import { setCarts } from "../app/cartSlice";
 
 let Rupiah = new Intl.NumberFormat("id-ID", {
   style: "currency",
@@ -16,20 +17,20 @@ let Rupiah = new Intl.NumberFormat("id-ID", {
 
 function CartRow({ data }) {
   const dispatch = useDispatch();
+  const { carts } = useSelector((state) => state.cart);
   const { user } = useContext(AuthContext);
-  const [quantity, setquantity] = useState(1);
+  const [quantity, setquantity] = useState(null);
 
   useEffect(() => {
-    if (data) {
+    if (data && user) {
+      dispatch(changeTotalPrice(user.uid));
       setquantity(data.quantityCheckout);
     }
-  }, [data]);
+  }, [data, user]);
 
   useEffect(() => {
-    if (data) {
-      if (quantity === 0) {
-        dispatch(deleteCart({ idCart: data.idCart, uid: user.uid }));
-      } else {
+    if (data && quantity && user) {
+      if (quantity >= 1) {
         dispatch(
           operatorCart({
             id: data.idCart,
@@ -37,12 +38,25 @@ function CartRow({ data }) {
             quantityCheckout: quantity,
           })
         );
+        dispatch(
+          setCarts(
+            carts.map((prev) => {
+              return prev.id === data.id
+                ? { ...prev, quantityCheckout: quantity }
+                : { ...prev };
+            })
+          )
+        );
       }
+    }
+
+    if (quantity === 0) {
+      dispatch(deleteCart({ idCart: data.idCart, uid: user.uid }));
     }
   }, [quantity]);
 
   return (
-    <div>
+    <div className="py-5">
       <div className="flex justify-between">
         <div className="w-fit flex gap-2.5">
           <div className="space-y-2.5">
@@ -64,7 +78,7 @@ function CartRow({ data }) {
                 </div>
                 <input
                   className="inputQuantity bg-gray-50 border-x-0 border-gray-300 h-10 w-6 text-center text-gray-900 text-lg block py-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black"
-                  value={quantity}
+                  value={quantity || 0}
                   type="number"
                   disabled
                 />

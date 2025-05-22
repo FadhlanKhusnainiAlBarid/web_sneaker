@@ -35,6 +35,7 @@ export const fetchCarts = (uid) => async (dispatch) => {
             doc(db, "sneakers", dataCart.data().sneakerId)
           );
           return {
+            id: reponse.id,
             idCart: dataCart.id,
             ...reponse.data(),
             image: reponse.data().image.color_1[0],

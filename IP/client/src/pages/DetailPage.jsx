@@ -76,6 +76,10 @@ function DetailPage() {
       Swal.fire("Status Add Cart", status.massage, status.icon);
     }
   }, [status]);
+
+  useEffect(() => {
+    console.log(snkr);
+  }, [snkr]);
   return (
     <div className="container mx-auto">
       <div className="lg:grid lg:grid-cols-12 lg:gap-x-4 pt-4">

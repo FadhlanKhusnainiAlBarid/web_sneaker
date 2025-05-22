@@ -1,13 +1,39 @@
 import { Button, HR } from "flowbite-react";
-import React, { useState } from "react";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import React, { useContext, useEffect, useState } from "react";
 import CheckIcon from "@mui/icons-material/Check";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCarts } from "../app/actionsCart";
+import { AuthContext } from "../context/AuthContext";
+import CartRow from "../components/CartRow";
+import { setTotalItems } from "../app/cartSlice";
+
+let Rupiah = new Intl.NumberFormat("id-ID", {
+  style: "currency",
+  currency: "IDR",
+  minimumFractionDigits: 0,
+});
 
 function CartPage() {
-  const [quantity, setquantity] = useState(10);
+  const dispatch = useDispatch();
+  const { carts, totalItems, totalPrice } = useSelector((state) => state.cart);
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchCarts(user.uid));
+    }
+  }, [dispatch, user]);
+
+  useEffect(() => {
+    if (carts) {
+      let newTotalItems = 0;
+      carts.forEach((element) => {
+        newTotalItems += element.quantityCheckout;
+        dispatch(setTotalItems(newTotalItems));
+      });
+    }
+  }, [carts]);
   return (
     <div className="container mx-auto px-2">
       <div className="lg:grid lg:grid-cols-12 lg:gap-x-4 pt-4 h-screen">
@@ -16,78 +42,21 @@ function CartPage() {
             <h1 className="text-2xl font-semibold">Cart</h1>
             <div className="lg:hidden block">
               <span className="text-base text-gray-600 font-medium">
-                10 items |
+                {totalItems} items |
               </span>{" "}
-              Rp 7.745.000,00
+              {Rupiah.format(totalPrice)}
             </div>
             <HR className="lg:hidden block dark:bg-gray-200 w-full mt-7 mb-5" />
           </div>
           <div className="flex flex-col">
             {/* component detail cart */}
-            <div>
-              <div className="flex justify-between">
-                <div className="w-fit flex gap-2.5">
-                  <div className="space-y-2.5">
-                    <img
-                      className="rounded h-41"
-                      src="https://static.nike.com/a/images/t_PDP_1728_v1/w_592,f_auto,q_auto:eco,b_rgb:f5f5f5/4f37fca8-6bce-43e7-ad07-f57ae3c13142/air-force-1-07-shoes-WrLlWX.png"
-                      alt=""
-                    />
-                    <div className="flex justify-between">
-                      <div className="flex size-fit rounded-full border border-gray-300">
-                        <div className="rounded-l-full bg-white">
-                          <button
-                            onClick={() =>
-                              setquantity((prev) => Math.max(prev - 1, 0))
-                            }
-                            className="size-10 cursor-pointer rounded-full hover:bg-gray-300 text-black"
-                            color=""
-                          >
-                            <RemoveIcon className="text-black" />
-                          </button>
-                        </div>
-                        <input
-                          className="inputQuantity bg-gray-50 border-x-0 border-gray-300 h-10 w-6 text-center text-gray-900 text-lg block py-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black"
-                          value={quantity}
-                          type="number"
-                          disabled
-                        />
-                        <div className="rounded-r-full bg-white">
-                          <button
-                            // this max will got from max quantity sneaker
-                            onClick={() =>
-                              setquantity((prev) => Math.min(prev + 1, 10))
-                            }
-                            className="size-10 cursor-pointer rounded-full bg-white hover:bg-gray-300 text-black"
-                            color=""
-                          >
-                            <AddIcon className="text-black" />
-                          </button>
-                        </div>
-                      </div>
-                      <button className="cursor-pointer size-[39.988px] rounded-full bg-white border border-gray-300 hover:bg-gray-300">
-                        <FavoriteBorderIcon />
-                      </button>
-                    </div>
-                  </div>
-                  <div>
-                    <span className="md:hidden block text-base text-nowrap font-semibold">
-                      Rp 6.196.000,00
-                    </span>
-                    <h1 className="text-wrap line-clamp-2 text-base lg:text-lg font-semibold leading-6 text-gray-900 dark:text-dark">
-                      Nike Air Force 1 '07
-                    </h1>
-                    <p className="mt-px text-base font-medium leading-5 text-gray-700 dark:text-gray-500">
-                      Men's Shoes
-                    </p>
-                  </div>
-                </div>
-                <span className="md:block hidden text-base text-nowrap font-semibold">
-                  Rp 6.196.000,00
-                </span>
-              </div>
-              <HR className="mb-0 dark:bg-gray-200" />
-            </div>
+            {carts.length > 0 ? (
+              carts.map((data) => <CartRow key={data.id} data={data} />)
+            ) : (
+              <h1 className="text-lg font-medium mb-10">
+                There are no items in your bag.
+              </h1>
+            )}
 
             <h1 className="lg:block hidden text-2xl font-semibold mt-8 mb-2.5">
               Favourites

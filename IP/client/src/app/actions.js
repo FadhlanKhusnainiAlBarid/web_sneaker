@@ -56,7 +56,7 @@ export const fetchSnkr = (id) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await getDoc(doc(db, "sneakers", id));
-    dispatch(setSnkr(response.data()));
+    dispatch(setSnkr({ id: response.id, ...response.data() }));
   } catch (error) {
     console.error(error);
   } finally {

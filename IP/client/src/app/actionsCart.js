@@ -96,6 +96,7 @@ export const addCart = (queryId) => async (dispatch, getState) => {
         );
         return;
       }
+      // if responseCheck.color selected berbeda maka akan tambah cart yang berbeda color
       const updateData = async () => {
         await updateDoc(doc(db, "carts", responseCheck.docs[0].id), {
           quantityCheckout: responseCheck.docs[0].data().quantityCheckout + 1,

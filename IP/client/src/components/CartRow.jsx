@@ -95,9 +95,9 @@ function CartRow({ data }) {
                   </button>
                 </div>
               </div>
-              <button className="cursor-pointer size-[39.988px] rounded-full bg-white border border-gray-300 hover:bg-gray-300">
+              {/* <button className="cursor-pointer size-[39.988px] rounded-full bg-white border border-gray-300 hover:bg-gray-300">
                 <FavoriteBorderIcon />
-              </button>
+              </button> */}
             </div>
           </div>
           <div>

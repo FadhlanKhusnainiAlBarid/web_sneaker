@@ -33,17 +33,22 @@ function NavbarComp() {
           {user ? (
             <>
               {role === "admin" ? (
-                <NavbarLink as={Link} to="/admin">
-                  admin
-                </NavbarLink>
+                <>
+                  <NavbarLink as={Link} to="/cart">
+                    cart
+                  </NavbarLink>
+                  <NavbarLink as={Link} to="/admin">
+                    admin
+                  </NavbarLink>
+                </>
               ) : (
                 <>
                   <NavbarLink as={Link} to="/cart">
                     cart
                   </NavbarLink>
-                  <NavbarLink as={Link} to="/favourite">
+                  {/* <NavbarLink as={Link} to="/favourite">
                     favourite
-                  </NavbarLink>
+                  </NavbarLink> */}
                 </>
               )}
 

@@ -94,6 +94,7 @@ function EditSnkrPage() {
           price={price}
           Rupiah={Rupiah}
           image={image}
+          information={information}
           selectColor={selectColor}
           setselectColor={setselectColor}
           selectImage={selectImage}

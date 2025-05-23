@@ -216,12 +216,12 @@ function DetailPage() {
                 "Add to Chart"
               )}
             </Button>
-            <Button
+            {/* <Button
               className="cursor-pointer w-full dark:text-dark dark:bg-white dark:hover:bg-gray-50/90 rounded-full"
               color="light"
             >
               Favourite <FavoriteBorderIcon />
-            </Button>
+            </Button> */}
           </div>
           <p className="mt-6 lg:mt-9 lg:px-0 px-4 text-sm lg:text-xl font-medium text-black dark:text-black">
             {snkr && snkr.information}

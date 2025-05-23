@@ -17,8 +17,6 @@ import {
   setTotalPrice,
 } from "./cartSlice";
 import { db } from "../config/firebase";
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
 
 export const fetchCarts = (uid) => async (dispatch) => {
   try {

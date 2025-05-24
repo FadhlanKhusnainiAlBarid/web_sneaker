@@ -1,3 +1,51 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=19351525&assignment_repo_type=AssignmentRepo)
+# 🛒 CMS Product Web App
 
-# FERN-P2-GC01
+A modern and responsive product management web application (CMS) built with React, Firebase, TailwindCSS, and more. This app includes both user and admin functionalities such as product browsing, cart management, and full product CRUD.
+
+---
+
+## ✨ Features
+
+### 🔓 **Authentication**
+- Sign In via form and Google OAuth
+- Secure Sign Out (token removal for data protection)
+
+### 🛍️ **User Features**
+- **Home Page** with:
+  - Product cards display
+  - Search by product name
+  - Filter by gender
+  - Sort by price
+  - Pagination for easy browsing
+- **Cart Functionality**:
+  - Add to cart
+  - Increment/decrement quantity
+  - Auto-remove item if quantity = 0
+
+### 🛠️ **Admin Features (CMS)**
+- **Admin Dashboard**:
+  - Table of all product data
+  - Sort products by price
+  - Add Product page
+  - Edit Product page
+  - Delete Product functionality
+- Clean UI for product management with real-time feedback
+
+---
+
+## 🧱 Tech Stack
+
+### 🔧 **Core**
+- [React](https://reactjs.org/) 19
+- [React Router DOM](https://reactrouter.com/) v7
+- [Redux Toolkit](https://redux-toolkit.js.org/) for state management
+- [Firebase](https://firebase.google.com/) for backend/authentication
+- [Cloudinary](https://cloudinary.com/) for image uploads
+
+### 💅 **Styling & UI**
+- [TailwindCSS](https://tailwindcss.com/) & [@mui/material](https://mui.com/)
+- [Flowbite React](https://flowbite-react.com/) components
+- [SweetAlert2](https://sweetalert2.github.io/) for alert dialogs
+- [Swiper](https://swiperjs.com/react) for mobile/tablet-friendly carousel
+
+---

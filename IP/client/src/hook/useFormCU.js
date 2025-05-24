@@ -32,9 +32,11 @@ function useFormCU() {
     );
   };
 
-  const handleDeleteInputImage = (index) => {
+  const handleDeleteInputImage = (i, index) => {
     setimage((prev) =>
-      prev.map((data, i) => (i === index ? data.slice(0, -1) : data))
+      prev.map((data, j) =>
+        j === i ? data.filter((d, k) => k !== index) : data
+      )
     );
   };
 
@@ -44,12 +46,10 @@ function useFormCU() {
     });
   };
 
-  const handleDeleteInputColor = () => {
+  const handleDeleteInputColor = (i) => {
     setselectColor(0);
     setselectImage(1);
-    setimage((prev) => {
-      return prev.slice(0, -1);
-    });
+    setimage((prev) => prev.filter((d, j) => j !== i));
   };
 
   const handleData = () => {

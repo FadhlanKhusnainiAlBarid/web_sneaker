@@ -16,6 +16,7 @@
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
     "@reduxjs/toolkit": "^2.8.1",
+    "@stagewise/toolbar-react": "^0.1.2",
     "@tailwindcss/vite": "^4.1.4",
     "firebase": "^11.6.1",
     "flowbite-react": "^0.11.7",

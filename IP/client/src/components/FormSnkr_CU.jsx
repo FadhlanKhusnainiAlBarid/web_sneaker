@@ -2,6 +2,7 @@ import React from "react";
 import { Button, HR, Label, Select, Textarea, TextInput } from "flowbite-react";
 import UploadWidget from "./UploadWidget";
 import Tooltip from "@mui/material/Tooltip";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 function FormSnkr_CU({
   action,
@@ -107,9 +108,20 @@ function FormSnkr_CU({
             {image.map((value, i) => {
               return (
                 <div key={i}>
-                  <h1 className="text-sm font-medium text-black md:text-base xl:text-lg">
-                    Colour {i + 1}
-                  </h1>
+                  <span className="flex items-center">
+                    <h1 className="text-sm font-medium text-black md:text-base xl:text-lg">
+                      Colour {i + 1}
+                    </h1>
+                    <Button
+                      className="cursor-pointer p-0 focus:ring-0"
+                      type="button"
+                      color="failure"
+                      disabled={image.length == 1}
+                      onClick={() => handleDeleteInputColor(i)}
+                    >
+                      <RemoveIcon />
+                    </Button>
+                  </span>
                   <div className="ml-5 space-y-3">
                     {value.map((data, index) => (
                       <div key={index}>
@@ -137,6 +149,17 @@ function FormSnkr_CU({
                             index={index}
                             handleAddImage={handleAddImage}
                           />
+                          <Tooltip title="Delete input image">
+                            <Button
+                              onClick={() => handleDeleteInputImage(i, index)}
+                              className="cursor-pointer p-0 focus:ring-0"
+                              type="button"
+                              color="failure"
+                              disabled={value.length == 1}
+                            >
+                              <RemoveIcon />
+                            </Button>
+                          </Tooltip>
                         </div>
                       </div>
                     ))}
@@ -149,15 +172,6 @@ function FormSnkr_CU({
                       >
                         Add Image
                       </Button>
-                      <Button
-                        disabled={value.length == 1}
-                        onClick={() => handleDeleteInputImage(i)}
-                        className="cursor-pointer"
-                        type="button"
-                        color="light"
-                      >
-                        Delete Image
-                      </Button>
                     </div>
                   </div>
                 </div>
@@ -166,13 +180,6 @@ function FormSnkr_CU({
             <div className="flex gap-3">
               <Button className="cursor-pointer" onClick={handleAddInputColor}>
                 Add Color
-              </Button>
-              <Button
-                className="cursor-pointer"
-                disabled={image.length == 1}
-                onClick={handleDeleteInputColor}
-              >
-                Delete Color
               </Button>
             </div>
           </div>
